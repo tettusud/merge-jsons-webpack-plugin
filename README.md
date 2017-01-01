@@ -71,6 +71,7 @@ npm i merge-jsons-webpack-plugin
                   })  
      ````
    
+   
    | groupBy            | Array of patterns and corresponding fileNames.                                                                              |                                                                 |
    |--------------------|-----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
    | groupBy[].pattern  | Pattern to search files for. eg: **/en.json will pull all en.json files under current working directory and sub directories |                                                                 |
