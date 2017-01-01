@@ -84,10 +84,10 @@ var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
 
 ```
  
-  **groupBy** 
+**groupBy** 
    >> Array of patterns and corresponding fileNames.
 
-   **groupBy[].pattern**
+**groupBy[].pattern**
    >> Pattern to search files for. eg:  **/en.json will pull all en.json files under
           current working directory and sub directories.
           
