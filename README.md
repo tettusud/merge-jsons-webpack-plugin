@@ -47,6 +47,7 @@ npm i merge-jsons-webpack-plugin
                                      }
                                  })
        ````
+       
        | Field Name      | Description                      |
        |-----------------|----------------------------------|
        | files           | Array of json files to be merged |
