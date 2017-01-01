@@ -37,7 +37,7 @@ var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
   
   1. **By files**
   
-     If you want to merge group of files use like this
+     If you want to merge group of files use like this.
  ``` 
   // options is optional
    new MergeJsonWebpackPlugin({
@@ -57,30 +57,30 @@ var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
   **output.fileName**
    >>File name for the resultant json file.
 
-2. **By patterns**
+   2. **By patterns**
   
-     This plugin uses glob for searching file patterns,please refer glob for usage for sample
+      This plugin uses glob for searching file patterns,please refer glob for usage for sample
      pattern
      
-     You can specify a pattern to pull all the files that satify the particular pattern and
+      You can specify a pattern to pull all the files that satify the particular pattern and
      output a single json file.    
      
      
     
  ```  
-  new MergeJsonWebpackPlugin({
-                   "output":{
-                     "groupBy":[
-                                   { "pattern":"{./jsons/module*/en.json,
-                                                 ./jsons/file1.json}", 
-                                      "fileName":"./dist/en.json" 
-                                   },
-                                   { "pattern":"{./jsons/module*/es.json,
-                                                 ./jsons/file2.json}", 
-                                       "fileName":"./dist/es.json" }
-                               ]        
-                           }
-                  })
+      new MergeJsonWebpackPlugin({
+                       "output":{
+                         "groupBy":[
+                                       { "pattern":"{./jsons/module*/en.json,
+                                                     ./jsons/file1.json}", 
+                                          "fileName":"./dist/en.json" 
+                                       },
+                                       { "pattern":"{./jsons/module*/es.json,
+                                                     ./jsons/file2.json}", 
+                                           "fileName":"./dist/es.json" }
+                                   ]        
+                               }
+                      })
 
 ```
  
