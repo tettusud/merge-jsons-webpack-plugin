@@ -18,16 +18,13 @@ npm i merge-jsons-webpack-plugin
 ```
 
 ```javascript
-var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
-
-// options is optional
+ var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
  new MergeJsonWebpackPlugin({
             "files": ['./jsons/file1.json',
                 './jsons/file3.json',
                 './jsons/file2.json'],
             "output":{
                 "fileName":"./dist/result.json"
-
             }
         })
 ```
