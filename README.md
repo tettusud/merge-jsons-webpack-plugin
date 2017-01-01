@@ -47,12 +47,13 @@ npm i merge-jsons-webpack-plugin
                                      }
                                  })
        ````
+       | Field Name      | Description                      |
+       |-----------------|----------------------------------|
+       | files           | Array of json files to be merged |
+       | output.fileName | Name of merged output file       |  
        
        
-     | Field Name      | Description                      |
-     |-----------------|----------------------------------|
-     | files           | Array of json files to be merged |
-     | output.fileName | Name of merged output file       |  
+     
      
   2. **By Patterns** 
        
