@@ -57,7 +57,7 @@ var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
   **output.fileName**
    >>File name for the resultant json file.
 
-2. **By pattern**
+2. **By patterns**
   
      This plugin uses glob for searching file patterns,please refer glob for usage for sample
      pattern
@@ -84,17 +84,18 @@ var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
 
 ```
  
-**groupBy** 
+    
+   **groupBy** 
    >> Array of patterns and corresponding fileNames.
 
-**groupBy[].pattern**
+   **groupBy[].pattern**
    >> Pattern to search files for. eg:  **/en.json will pull all en.json files under
           current working directory and sub directories.
           
   >> Do **not use** curly brackets if there is only single pattern to consider
  
  ```angular2html
-pattern:"./node_modules/**/en.json"
+    pattern:"./node_modules/**/en.json"
 ```
   >> **Use** curly brackets to group more than one pattern together
       
