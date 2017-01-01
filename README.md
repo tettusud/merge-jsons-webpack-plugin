@@ -36,25 +36,22 @@ npm i merge-jsons-webpack-plugin
   
        If you want to merge group of files use like this.
       
-        ```` 
-          // options is optional
-           new MergeJsonWebpackPlugin({
-                      "files": ['./jsons/file1.json',
-                          './jsons/file3.json',
-                          './jsons/file2.json'],
-                      "output":{
-                          "fileName":"./dist/result.json"
-          
-                      }
-                  })
-        ````
-                
-       **files** 
-       >>  Input json files to be merged.
-          
-        **output.fileName**
-        >> File name for the resultant json file.
-
+       ````javascript
+               new MergeJsonWebpackPlugin({
+                                     "files": ['./jsons/file1.json',
+                                         './jsons/file3.json',
+                                         './jsons/file2.json'],
+                                     "output":{
+                                         "fileName":"./dist/result.json"
+                         
+                                     }
+                                 })
+       ````
+     | Field Name      | Description                      |
+     |-----------------|----------------------------------|
+     | files           | Array of json files to be merged |
+     | output.fileName | Name of merged output file       |  
+     
   2. **By Patterns** 
        
        This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern.               
