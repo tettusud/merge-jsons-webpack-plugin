@@ -1,0 +1,45 @@
+# Project specific
+**/dist/
+build/
+__build__/
+.tmp/
+
+
+*.ts
+*.tgz
+
+# Sourcemaps
+*.map
+
+# ignore
+.gitattributes
+.npmignore
+
+# Node
+node_modules/
+jspm_packages/
+
+# OS generated files #
+Desktop.ini
+Thumbs.db
+.DS_Store
+ehthumbs.db
+Icon?
+
+# JetBrains IDEs
+*.iml
+.idea/
+.webstorm/
+*.swp
+
+# Sublime text
+.sublime-gulp.
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+#typings
+tsconfig.json
+typings.json

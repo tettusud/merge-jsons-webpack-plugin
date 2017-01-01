@@ -1,0 +1,38 @@
+# Project specific
+dist/
+build/
+__build__/
+.tmp/
+stats.json
+
+example/dist
+example/
+
+# Sourcemaps
+*.map
+
+# Node
+node_modules/
+jspm_packages/
+bower_components/
+
+# OS generated files #
+Desktop.ini
+Thumbs.db
+.DS_Store
+ehthumbs.db
+Icon?
+
+# JetBrains IDEs
+*.iml
+.idea/
+.webstorm/
+*.swp
+
+# Sublime text
+.sublime-gulp.cache
+
+# Runtime data
+pids
+*.pid
+*.seed
