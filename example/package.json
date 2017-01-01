@@ -1,0 +1,37 @@
+{
+    "name": "json-merge",
+    "description": "This plugin will merge array of json files into one file",
+    "version": "1.0.0",
+    "author": {
+        "email": "sudharsan_tk@yahoo.co.in",
+        "name": "Sudharsan Tettu"
+    },
+    "contributors": [
+    ],
+    "homepage": "https://github.com/sudharsantk/json-merge",
+    "bugs": "https://github.com/sudharsantk/json-merge/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sudharsantk/json-merge.git"
+    },
+    "private": false,
+    "license": "MIT",
+    "keywords": [
+        "webpack",
+        "json",
+        "files",
+        "merge",
+        "plugin",
+        "configuration"
+    ],
+    "dependencies": {
+        "json-loader": "latest"
+    },
+    "devDependencies": {
+    },
+    "main": "index.js",
+    "scripts": {
+        "webpack": "webpack",
+        "test": "webpack"
+    }
+}

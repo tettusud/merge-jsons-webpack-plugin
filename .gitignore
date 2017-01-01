@@ -5,8 +5,7 @@ __build__/
 .tmp/
 stats.json
 
-example/dist
-example/
+
 
 # Sourcemaps
 *.map
