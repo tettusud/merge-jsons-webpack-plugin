@@ -5,7 +5,7 @@ __build__/
 .tmp/
 stats.json
 
-
+.vscode/
 
 # Sourcemaps
 *.map
