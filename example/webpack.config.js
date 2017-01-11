@@ -34,7 +34,7 @@ module.exports = {
                     "pattern": "{./node_modules/module*/en.json,./jsons/file1.json}",
                     "fileName": "./out/module1/module2/en.json"
                 },
-                    {"pattern": "{./jsons/module*/es.json,./jsons/file2.json}", "fileName": "./dist/es.json"}]
+                    {"pattern": "./jsons/module*/es.json", "fileName": "./dist/es.json"}]
 
             }
         })

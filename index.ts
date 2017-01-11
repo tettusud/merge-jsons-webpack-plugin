@@ -1,9 +1,6 @@
 //references https://basarat.gitbooks.io/typescript/content/docs/quick/nodejs.html
 import {Promise} from "es6-promise";
-
-
 import path = require('path');
-import merge=require('merge');
 import Glob=require('glob');
 import fs = require('fs');
 
@@ -82,7 +79,7 @@ class MergeJsonWebpackPlugin {
             let mergedContents = {};
 
             for (let entryData of mergedJsons) {
-                mergedContents = merge(mergedContents, entryData);
+                mergedContents = this.mergeDeep(mergedContents, entryData);
             }
             //return the stringify version of json
             let retVal = JSON.stringify(mergedContents);
@@ -90,6 +87,23 @@ class MergeJsonWebpackPlugin {
         });
     }
 
+    /**
+     * deep merging of json child object
+     * code contributed by @leonardopurro
+     */
+    mergeDeep(target, source) {
+        if (typeof target == "object" && typeof source == "object") {
+            for (const key in source) {
+                if (typeof source[key] == "object") {
+                    if (!target[key]) target[key]={};
+                    this.mergeDeep(target[key], source[key]);
+                } else {
+                   target[key]=source[key];
+                }
+            }
+        }
+        return target;
+    }
 
     /**
      * writes the combined json string to file system to a folder output
@@ -141,7 +155,7 @@ class MergeJsonWebpackPlugin {
 
         return new Promise((resolve, reject) => {
 
-            new Glob(pattern, {mark: true}, function (err, matches) {
+            new Glob(pattern, {mark: true}, function (err:any, matches:any) {
 
                 if (err) {
                     throw err;

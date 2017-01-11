@@ -1,3 +1,10 @@
 {
-    "WORLD": "Mundo"
+    "WORLD": "Mundo",
+    "child":{
+        "name":"child of en",
+        "type":"string",
+        "grandchild":{
+            "index":"1"
+        }
+    }
 }

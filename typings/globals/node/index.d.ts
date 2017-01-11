@@ -25,20 +25,16 @@ interface ErrorConstructor {
 // compat for TypeScript 1.8
 // if you use with --target es3 or --target es5 and use below definitions,
 // use the lib.es6.d.ts that is bundled with TypeScript 1.8.
-interface MapConstructor {
-}
-interface WeakMapConstructor {
-}
-interface SetConstructor {
-}
-interface WeakSetConstructor {
-}
+interface MapConstructor { }
+interface WeakMapConstructor { }
+interface SetConstructor { }
+interface WeakSetConstructor { }
 
 /************************************************
- *                                               *
- *                   GLOBAL                      *
- *                                               *
- ************************************************/
+*                                               *
+*                   GLOBAL                      *
+*                                               *
+************************************************/
 declare var process: NodeJS.Process;
 declare var global: NodeJS.Global;
 declare var console: Console;
@@ -94,8 +90,7 @@ declare var SlowBuffer: {
 
 // Buffer class
 type BufferEncoding = "ascii" | "utf8" | "utf16le" | "ucs2" | "binary" | "hex";
-interface Buffer extends NodeBuffer {
-}
+interface Buffer extends NodeBuffer { }
 
 /**
  * Raw data is stored in instances of the Buffer class.
@@ -237,10 +232,10 @@ declare var Buffer: {
 };
 
 /************************************************
- *                                               *
- *               GLOBAL INTERFACES               *
- *                                               *
- ************************************************/
+*                                               *
+*               GLOBAL INTERFACES               *
+*                                               *
+************************************************/
 declare namespace NodeJS {
     export var Console: {
         prototype: Console;
@@ -279,7 +274,7 @@ declare namespace NodeJS {
         setEncoding(encoding: string | null): void;
         pause(): ReadableStream;
         resume(): ReadableStream;
-        pipe<T extends WritableStream>(destination: T, options?: {end?: boolean;}): T;
+        pipe<T extends WritableStream>(destination: T, options?: { end?: boolean; }): T;
         unpipe<T extends WritableStream>(destination?: T): void;
         unshift(chunk: string): void;
         unshift(chunk: Buffer): void;
@@ -302,8 +297,7 @@ declare namespace NodeJS {
         resume(): ReadWriteStream;
     }
 
-    export interface Events extends EventEmitter {
-    }
+    export interface Events extends EventEmitter { }
 
     export interface Domain extends Events {
         run(fn: Function): void;
@@ -482,8 +476,7 @@ declare namespace NodeJS {
     }
 }
 
-interface IterableIterator<T> {
-}
+interface IterableIterator<T> { }
 
 /**
  * @deprecated
@@ -491,7 +484,7 @@ interface IterableIterator<T> {
 interface NodeBuffer extends Uint8Array {
     write(string: string, offset?: number, length?: number, encoding?: string): number;
     toString(encoding?: string, start?: number, end?: number): string;
-    toJSON(): {type: 'Buffer', data: any[]};
+    toJSON(): { type: 'Buffer', data: any[] };
     equals(otherBuffer: Buffer): boolean;
     compare(otherBuffer: Buffer, targetStart?: number, targetEnd?: number, sourceStart?: number, sourceEnd?: number): number;
     copy(targetBuffer: Buffer, targetStart?: number, sourceStart?: number, sourceEnd?: number): number;
@@ -545,15 +538,15 @@ interface NodeBuffer extends Uint8Array {
 }
 
 /************************************************
- *                                               *
- *                   MODULES                     *
- *                                               *
- ************************************************/
+*                                               *
+*                   MODULES                     *
+*                                               *
+************************************************/
 declare module "buffer" {
     export var INSPECT_MAX_BYTES: number;
     var BuffType: typeof Buffer;
     var SlowBuffType: typeof SlowBuffer;
-    export {BuffType as Buffer, SlowBuffType as SlowBuffer};
+    export { BuffType as Buffer, SlowBuffType as SlowBuffer };
 }
 
 declare module "querystring" {
@@ -574,8 +567,7 @@ declare module "querystring" {
 }
 
 declare module "events" {
-    class internal extends NodeJS.EventEmitter {
-    }
+    class internal extends NodeJS.EventEmitter { }
 
     namespace internal {
         export class EventEmitter extends internal {
@@ -616,7 +608,7 @@ declare module "http" {
         socketPath?: string;
         method?: string;
         path?: string;
-        headers?: {[key: string]: any};
+        headers?: { [key: string]: any };
         auth?: string;
         agent?: Agent | boolean;
     }
@@ -721,8 +713,7 @@ declare module "http" {
     /**
      * @deprecated Use IncomingMessage
      */
-    export interface ClientResponse extends IncomingMessage {
-    }
+    export interface ClientResponse extends IncomingMessage { }
 
     export interface AgentOptions {
         /**
@@ -1040,23 +1031,15 @@ declare module "cluster" {
 
 declare module "zlib" {
     import * as stream from "stream";
-    export interface ZlibOptions { chunkSize?: number; windowBits?: number; level?: number; memLevel?: number; strategy?: number; dictionary?: any; finishFlush?: number
-    }
+    export interface ZlibOptions { chunkSize?: number; windowBits?: number; level?: number; memLevel?: number; strategy?: number; dictionary?: any; finishFlush?: number }
 
-    export interface Gzip extends stream.Transform {
-    }
-    export interface Gunzip extends stream.Transform {
-    }
-    export interface Deflate extends stream.Transform {
-    }
-    export interface Inflate extends stream.Transform {
-    }
-    export interface DeflateRaw extends stream.Transform {
-    }
-    export interface InflateRaw extends stream.Transform {
-    }
-    export interface Unzip extends stream.Transform {
-    }
+    export interface Gzip extends stream.Transform { }
+    export interface Gunzip extends stream.Transform { }
+    export interface Deflate extends stream.Transform { }
+    export interface Inflate extends stream.Transform { }
+    export interface DeflateRaw extends stream.Transform { }
+    export interface InflateRaw extends stream.Transform { }
+    export interface Unzip extends stream.Transform { }
 
     export function createGzip(options?: ZlibOptions): Gzip;
     export function createGunzip(options?: ZlibOptions): Gunzip;
@@ -1144,11 +1127,9 @@ declare module "os" {
     export function cpus(): CpuInfo[];
     export function type(): string;
     export function release(): string;
-
-    export function networkInterfaces(): {[index: string]: NetworkInterfaceInfo[]};
+    export function networkInterfaces(): { [index: string]: NetworkInterfaceInfo[] };
     export function homedir(): string;
-
-    export function userInfo(options?: {encoding: string}): {username: string, uid: number, gid: number, shell: any, homedir: string}
+    export function userInfo(options?: { encoding: string }): { username: string, uid: number, gid: number, shell: any, homedir: string }
     export var constants: {
         UV_UDP_REUSEADDR: number,
         errno: {
@@ -1307,8 +1288,7 @@ declare module "https" {
         secureProtocol?: string;
     }
 
-    export interface Agent extends http.Agent {
-    }
+    export interface Agent extends http.Agent { }
 
     export interface AgentOptions extends http.AgentOptions {
         pfx?: any;
@@ -1325,8 +1305,7 @@ declare module "https" {
     export var Agent: {
         new (options?: AgentOptions): Agent;
     };
-    export interface Server extends tls.Server {
-    }
+    export interface Server extends tls.Server { }
     export function createServer(options: ServerOptions, requestListener?: Function): Server;
     export function request(options: RequestOptions, callback?: (res: http.IncomingMessage) => void): http.ClientRequest;
     export function get(options: RequestOptions, callback?: (res: http.IncomingMessage) => void): http.ClientRequest;
@@ -1366,7 +1345,7 @@ declare module "repl" {
     }
 
     export interface REPLServer extends readline.ReadLine {
-        defineCommand(keyword: string, cmd: Function | {help: string, action: Function}): void;
+        defineCommand(keyword: string, cmd: Function | { help: string, action: Function }): void;
         displayPrompt(preserveCursor?: boolean): void;
 
         /**
@@ -1515,8 +1494,7 @@ declare module "readline" {
 }
 
 declare module "vm" {
-    export interface Context {
-    }
+    export interface Context { }
     export interface ScriptOptions {
         filename?: string;
         lineOffset?: number;
@@ -1865,7 +1843,7 @@ declare module "net" {
         setTimeout(timeout: number, callback?: Function): void;
         setNoDelay(noDelay?: boolean): void;
         setKeepAlive(enable?: boolean, initialDelay?: number): void;
-        address(): {port: number; family: string; address: string;};
+        address(): { port: number; family: string; address: string; };
         unref(): void;
         ref(): void;
 
@@ -1958,7 +1936,7 @@ declare module "net" {
     }
 
     export var Socket: {
-        new (options?: {fd?: string; type?: string; allowHalfOpen?: boolean;}): Socket;
+        new (options?: { fd?: string; type?: string; allowHalfOpen?: boolean; }): Socket;
     };
 
     export interface ListenOptions {
@@ -1980,7 +1958,7 @@ declare module "net" {
         listen(handle: any, backlog?: number, listeningListener?: Function): Server;
         listen(handle: any, listeningListener?: Function): Server;
         close(callback?: Function): Server;
-        address(): {port: number; family: string; address: string;};
+        address(): { port: number; family: string; address: string; };
         getConnections(cb: (error: Error, count: number) => void): void;
         ref(): Server;
         unref(): Server;
@@ -2031,13 +2009,11 @@ declare module "net" {
         prependOnceListener(event: "listening", listener: () => void): this;
     }
     export function createServer(connectionListener?: (socket: Socket) => void): Server;
-    export function createServer(options?: {allowHalfOpen?: boolean;}, connectionListener?: (socket: Socket) => void): Server;
-
-    export function connect(options: {port: number, host?: string, localAddress?: string, localPort?: string, family?: number, allowHalfOpen?: boolean;}, connectionListener?: Function): Socket;
+    export function createServer(options?: { allowHalfOpen?: boolean; }, connectionListener?: (socket: Socket) => void): Server;
+    export function connect(options: { port: number, host?: string, localAddress?: string, localPort?: string, family?: number, allowHalfOpen?: boolean; }, connectionListener?: Function): Socket;
     export function connect(port: number, host?: string, connectionListener?: Function): Socket;
     export function connect(path: string, connectionListener?: Function): Socket;
-
-    export function createConnection(options: {port: number, host?: string, localAddress?: string, localPort?: string, family?: number, allowHalfOpen?: boolean;}, connectionListener?: Function): Socket;
+    export function createConnection(options: { port: number, host?: string, localAddress?: string, localPort?: string, family?: number, allowHalfOpen?: boolean; }, connectionListener?: Function): Socket;
     export function createConnection(port: number, host?: string, connectionListener?: Function): Socket;
     export function createConnection(path: string, connectionListener?: Function): Socket;
     export function isIP(input: string): number;
@@ -2305,9 +2281,8 @@ declare module "fs" {
     export function readlink(path: string | Buffer, callback?: (err: NodeJS.ErrnoException, linkString: string) => any): void;
     export function readlinkSync(path: string | Buffer): string;
     export function realpath(path: string | Buffer, callback?: (err: NodeJS.ErrnoException, resolvedPath: string) => any): void;
-    export function realpath(path: string | Buffer, cache: {[path: string]: string}, callback: (err: NodeJS.ErrnoException, resolvedPath: string) => any): void;
-
-    export function realpathSync(path: string | Buffer, cache?: {[path: string]: string}): string;
+    export function realpath(path: string | Buffer, cache: { [path: string]: string }, callback: (err: NodeJS.ErrnoException, resolvedPath: string) => any): void;
+    export function realpathSync(path: string | Buffer, cache?: { [path: string]: string }): string;
     /*
      * Asynchronous unlink - deletes the file specified in {path}
      *
@@ -2428,7 +2403,7 @@ declare module "fs" {
      * @param options An object with optional {encoding} and {flag} properties.  If {encoding} is specified, readFile returns a string; otherwise it returns a Buffer.
      * @param callback - The callback is passed two arguments (err, data), where data is the contents of the file.
      */
-    export function readFile(filename: string, options: {encoding: string; flag?: string;}, callback: (err: NodeJS.ErrnoException, data: string) => void): void;
+    export function readFile(filename: string, options: { encoding: string; flag?: string; }, callback: (err: NodeJS.ErrnoException, data: string) => void): void;
     /*
      * Asynchronous readFile - Asynchronously reads the entire contents of a file.
      *
@@ -2436,7 +2411,7 @@ declare module "fs" {
      * @param options An object with optional {encoding} and {flag} properties.  If {encoding} is specified, readFile returns a string; otherwise it returns a Buffer.
      * @param callback - The callback is passed two arguments (err, data), where data is the contents of the file.
      */
-    export function readFile(filename: string, options: {flag?: string;}, callback: (err: NodeJS.ErrnoException, data: Buffer) => void): void;
+    export function readFile(filename: string, options: { flag?: string; }, callback: (err: NodeJS.ErrnoException, data: Buffer) => void): void;
     /*
      * Asynchronous readFile - Asynchronously reads the entire contents of a file.
      *
@@ -2457,33 +2432,30 @@ declare module "fs" {
      * @param fileName
      * @param options An object with optional {encoding} and {flag} properties.  If {encoding} is specified, readFileSync returns a string; otherwise it returns a Buffer.
      */
-    export function readFileSync(filename: string, options: {encoding: string; flag?: string;}): string;
+    export function readFileSync(filename: string, options: { encoding: string; flag?: string; }): string;
     /*
      * Synchronous readFile - Synchronously reads the entire contents of a file.
      *
      * @param fileName
      * @param options An object with optional {encoding} and {flag} properties.  If {encoding} is specified, readFileSync returns a string; otherwise it returns a Buffer.
      */
-    export function readFileSync(filename: string, options?: {flag?: string;}): Buffer;
+    export function readFileSync(filename: string, options?: { flag?: string; }): Buffer;
     export function writeFile(filename: string, data: any, callback?: (err: NodeJS.ErrnoException) => void): void;
-    export function writeFile(filename: string, data: any, options: {encoding?: string; mode?: number; flag?: string;}, callback?: (err: NodeJS.ErrnoException) => void): void;
-    export function writeFile(filename: string, data: any, options: {encoding?: string; mode?: string; flag?: string;}, callback?: (err: NodeJS.ErrnoException) => void): void;
-
-    export function writeFileSync(filename: string, data: any, options?: {encoding?: string; mode?: number; flag?: string;}): void;
-    export function writeFileSync(filename: string, data: any, options?: {encoding?: string; mode?: string; flag?: string;}): void;
-
-    export function appendFile(filename: string, data: any, options: {encoding?: string; mode?: number; flag?: string;}, callback?: (err: NodeJS.ErrnoException) => void): void;
-    export function appendFile(filename: string, data: any, options: {encoding?: string; mode?: string; flag?: string;}, callback?: (err: NodeJS.ErrnoException) => void): void;
+    export function writeFile(filename: string, data: any, options: { encoding?: string; mode?: number; flag?: string; }, callback?: (err: NodeJS.ErrnoException) => void): void;
+    export function writeFile(filename: string, data: any, options: { encoding?: string; mode?: string; flag?: string; }, callback?: (err: NodeJS.ErrnoException) => void): void;
+    export function writeFileSync(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }): void;
+    export function writeFileSync(filename: string, data: any, options?: { encoding?: string; mode?: string; flag?: string; }): void;
+    export function appendFile(filename: string, data: any, options: { encoding?: string; mode?: number; flag?: string; }, callback?: (err: NodeJS.ErrnoException) => void): void;
+    export function appendFile(filename: string, data: any, options: { encoding?: string; mode?: string; flag?: string; }, callback?: (err: NodeJS.ErrnoException) => void): void;
     export function appendFile(filename: string, data: any, callback?: (err: NodeJS.ErrnoException) => void): void;
-
-    export function appendFileSync(filename: string, data: any, options?: {encoding?: string; mode?: number; flag?: string;}): void;
-    export function appendFileSync(filename: string, data: any, options?: {encoding?: string; mode?: string; flag?: string;}): void;
+    export function appendFileSync(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }): void;
+    export function appendFileSync(filename: string, data: any, options?: { encoding?: string; mode?: string; flag?: string; }): void;
     export function watchFile(filename: string, listener: (curr: Stats, prev: Stats) => void): void;
-    export function watchFile(filename: string, options: {persistent?: boolean; interval?: number;}, listener: (curr: Stats, prev: Stats) => void): void;
+    export function watchFile(filename: string, options: { persistent?: boolean; interval?: number; }, listener: (curr: Stats, prev: Stats) => void): void;
     export function unwatchFile(filename: string, listener?: (curr: Stats, prev: Stats) => void): void;
     export function watch(filename: string, listener?: (event: string, filename: string) => any): FSWatcher;
     export function watch(filename: string, encoding: string, listener?: (event: string, filename: string | Buffer) => any): FSWatcher;
-    export function watch(filename: string, options: {persistent?: boolean; recursive?: boolean; encoding?: string}, listener?: (event: string, filename: string | Buffer) => any): FSWatcher;
+    export function watch(filename: string, options: { persistent?: boolean; recursive?: boolean; encoding?: string }, listener?: (event: string, filename: string | Buffer) => any): FSWatcher;
     export function exists(path: string | Buffer, callback?: (exists: boolean) => void): void;
     export function existsSync(path: string | Buffer): boolean;
 
@@ -2846,72 +2818,72 @@ declare module "tls" {
         /**
          * Construct a new tls.TLSSocket object from an existing TCP socket.
          */
-        constructor(socket: net.Socket, options?: {
-            /**
-             * An optional TLS context object from tls.createSecureContext()
-             */
-            secureContext?: SecureContext,
-            /**
-             * If true the TLS socket will be instantiated in server-mode.
-             * Defaults to false.
-             */
-            isServer?: boolean,
-            /**
-             * An optional net.Server instance.
-             */
-            server?: net.Server,
-            /**
-             * If true the server will request a certificate from clients that
-             * connect and attempt to verify that certificate. Defaults to
-             * false.
-             */
-            requestCert?: boolean,
-            /**
-             * If true the server will reject any connection which is not
-             * authorized with the list of supplied CAs. This option only has an
-             * effect if requestCert is true. Defaults to false.
-             */
-            rejectUnauthorized?: boolean,
-            /**
-             * An array of strings or a Buffer naming possible NPN protocols.
-             * (Protocols should be ordered by their priority.)
-             */
-            NPNProtocols?: string[] | Buffer,
-            /**
-             * An array of strings or a Buffer naming possible ALPN protocols.
-             * (Protocols should be ordered by their priority.) When the server
-             * receives both NPN and ALPN extensions from the client, ALPN takes
-             * precedence over NPN and the server does not send an NPN extension
-             * to the client.
-             */
-            ALPNProtocols?: string[] | Buffer,
-            /**
-             * SNICallback(servername, cb) <Function> A function that will be
-             * called if the client supports SNI TLS extension. Two arguments
-             * will be passed when called: servername and cb. SNICallback should
-             * invoke cb(null, ctx), where ctx is a SecureContext instance.
-             * (tls.createSecureContext(...) can be used to get a proper
-             * SecureContext.) If SNICallback wasn't provided the default callback
-             * with high-level API will be used (see below).
-             */
-            SNICallback?: Function,
-            /**
-             * An optional Buffer instance containing a TLS session.
-             */
-            session?: Buffer,
-            /**
-             * If true, specifies that the OCSP status request extension will be
-             * added to the client hello and an 'OCSPResponse' event will be
-             * emitted on the socket before establishing a secure communication
-             */
-            requestOCSP?: boolean
+        constructor(socket:net.Socket, options?: {
+          /**
+           * An optional TLS context object from tls.createSecureContext()
+           */
+          secureContext?: SecureContext,
+          /**
+           * If true the TLS socket will be instantiated in server-mode.
+           * Defaults to false.
+           */
+          isServer?: boolean,
+          /**
+           * An optional net.Server instance.
+           */
+          server?: net.Server,
+          /**
+           * If true the server will request a certificate from clients that
+           * connect and attempt to verify that certificate. Defaults to
+           * false.
+           */
+          requestCert?: boolean,
+          /**
+           * If true the server will reject any connection which is not
+           * authorized with the list of supplied CAs. This option only has an
+           * effect if requestCert is true. Defaults to false.
+           */
+          rejectUnauthorized?: boolean,
+          /**
+           * An array of strings or a Buffer naming possible NPN protocols.
+           * (Protocols should be ordered by their priority.)
+           */
+          NPNProtocols?: string[] | Buffer,
+          /**
+           * An array of strings or a Buffer naming possible ALPN protocols.
+           * (Protocols should be ordered by their priority.) When the server
+           * receives both NPN and ALPN extensions from the client, ALPN takes
+           * precedence over NPN and the server does not send an NPN extension
+           * to the client.
+           */
+          ALPNProtocols?: string[] | Buffer,
+          /**
+           * SNICallback(servername, cb) <Function> A function that will be
+           * called if the client supports SNI TLS extension. Two arguments
+           * will be passed when called: servername and cb. SNICallback should
+           * invoke cb(null, ctx), where ctx is a SecureContext instance.
+           * (tls.createSecureContext(...) can be used to get a proper
+           * SecureContext.) If SNICallback wasn't provided the default callback
+           * with high-level API will be used (see below).
+           */
+          SNICallback?: Function,
+          /**
+           * An optional Buffer instance containing a TLS session.
+           */
+          session?: Buffer,
+          /**
+           * If true, specifies that the OCSP status request extension will be
+           * added to the client hello and an 'OCSPResponse' event will be
+           * emitted on the socket before establishing a secure communication
+           */
+          requestOCSP?: boolean
         });
         /**
          * Returns the bound address, the address family name and port of the underlying socket as reported by
          * the operating system.
          * @returns {any} - An object with three properties, e.g. { port: 12346, family: 'IPv4', address: '127.0.0.1' }.
          */
-        address(): {port: number; family: string; address: string};
+        address(): { port: number; family: string; address: string };
         /**
          * A boolean that is true if the peer certificate was signed by one of the specified CAs, otherwise false.
          */
@@ -3084,7 +3056,7 @@ declare module "tls" {
 
     export interface Server extends net.Server {
         close(callback?: Function): Server;
-        address(): {port: number; family: string; address: string;};
+        address(): { port: number; family: string; address: string; };
         addContext(hostName: string, credentials: {
             key: string;
             cert: string;
@@ -3211,8 +3183,7 @@ declare module "crypto" {
         crl: string | string[];
         ciphers: string;
     }
-    export interface Credentials { context?: any;
-    }
+    export interface Credentials { context?: any; }
     export function createCredentials(details: CredentialDetails): Credentials;
     export function createHash(algorithm: string): Hash;
     export function createHmac(algorithm: string, key: string | Buffer): Hmac;
@@ -3265,8 +3236,8 @@ declare module "crypto" {
     export interface Signer extends NodeJS.WritableStream {
         update(data: string | Buffer): Signer;
         update(data: string | Buffer, input_encoding: Utf8AsciiLatin1Encoding): Signer;
-        sign(private_key: string | {key: string; passphrase: string}): Buffer;
-        sign(private_key: string | {key: string; passphrase: string}, output_format: HexBase64Latin1Encoding): string;
+        sign(private_key: string | { key: string; passphrase: string }): Buffer;
+        sign(private_key: string | { key: string; passphrase: string }, output_format: HexBase64Latin1Encoding): string;
     }
     export function createVerify(algorith: string): Verify;
     export interface Verify extends NodeJS.WritableStream {
@@ -3347,12 +3318,11 @@ declare module "stream" {
     import * as events from "events";
 
     class internal extends events.EventEmitter {
-        pipe<T extends NodeJS.WritableStream>(destination: T, options?: {end?: boolean;}): T;
+        pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
     }
     namespace internal {
 
-        export class Stream extends internal {
-        }
+        export class Stream extends internal { }
 
         export interface ReadableOptions {
             highWaterMark?: number;
@@ -3369,8 +3339,7 @@ declare module "stream" {
             setEncoding(encoding: string): void;
             pause(): Readable;
             resume(): Readable;
-
-            pipe<T extends NodeJS.WritableStream>(destination: T, options?: {end?: boolean;}): T;
+            pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
             unpipe<T extends NodeJS.WritableStream>(destination?: T): void;
             unshift(chunk: any): void;
             wrap(oldStream: NodeJS.ReadableStream): NodeJS.ReadableStream;
@@ -3441,7 +3410,7 @@ declare module "stream" {
             decodeStrings?: boolean;
             objectMode?: boolean;
             write?: (chunk: string | Buffer, encoding: string, callback: Function) => any;
-            writev?: (chunks: {chunk: string | Buffer, encoding: string}[], callback: Function) => any;
+            writev?: (chunks: { chunk: string | Buffer, encoding: string }[], callback: Function) => any;
         }
 
         export class Writable extends events.EventEmitter implements NodeJS.WritableStream {
@@ -3559,8 +3528,7 @@ declare module "stream" {
             setEncoding(encoding: string): void;
             pause(): Transform;
             resume(): Transform;
-
-            pipe<T extends NodeJS.WritableStream>(destination: T, options?: {end?: boolean;}): T;
+            pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
             unpipe<T extends NodeJS.WritableStream>(destination?: T): void;
             unshift(chunk: any): void;
             wrap(oldStream: NodeJS.ReadableStream): NodeJS.ReadableStream;
@@ -3572,8 +3540,7 @@ declare module "stream" {
             end(chunk: any, encoding?: string, cb?: Function): void;
         }
 
-        export class PassThrough extends Transform {
-        }
+        export class PassThrough extends Transform { }
     }
 
     export = internal;
@@ -3984,7 +3951,7 @@ declare module "v8" {
         space_available_size: number;
         physical_space_size: number;
     }
-    export function getHeapStatistics(): {total_heap_size: number, total_heap_size_executable: number, total_physical_size: number, total_avaialble_size: number, used_heap_size: number, heap_size_limit: number};
+    export function getHeapStatistics(): { total_heap_size: number, total_heap_size_executable: number, total_physical_size: number, total_avaialble_size: number, used_heap_size: number, heap_size_limit: number };
     export function getHeapSpaceStatistics(): HeapSpaceInfo[];
     export function setFlagsFromString(flags: string): void;
 }
@@ -4124,7 +4091,7 @@ declare module "_debugger" {
         reqContinue(cb: RequestHandler): void;
     }
 
-    export var Client: {
+    export var Client : {
         new (): ClientInstance
     }
 }

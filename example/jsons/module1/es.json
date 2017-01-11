@@ -1,3 +1,10 @@
 {
-    "HELLO": "HOLA MUNDO"
+    "HELLO": "HOLA MUNDO",
+    "child":{
+        "name":"child of en",
+        "class":"string",
+        "grandchild":{
+            "name":" grand child of module1"
+        }
+    }
 }

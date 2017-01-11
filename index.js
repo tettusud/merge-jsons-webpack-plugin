@@ -1,11 +1,9 @@
 "use strict";
-//references https://basarat.gitbooks.io/typescript/content/docs/quick/nodejs.html
 var es6_promise_1 = require("es6-promise");
 var path = require("path");
-var merge = require("merge");
 var Glob = require("glob");
 var fs = require("fs");
-var _root = path.resolve(__dirname, "./"); // project root folder
+var _root = path.resolve(__dirname, "./");
 var MergeJsonWebpackPlugin = (function () {
     function MergeJsonWebpackPlugin(options) {
         var _this = this;
@@ -17,11 +15,6 @@ var MergeJsonWebpackPlugin = (function () {
                 console.log("merge-jsons-webpack-plugin compilation done");
             });
         };
-        /**
-         *
-         * @param files
-         * @returns {Array}
-         */
         this.load = function (files) {
             return new es6_promise_1.Promise(function (resolve, reject) {
                 var mergedJsons = [];
@@ -42,7 +35,6 @@ var MergeJsonWebpackPlugin = (function () {
                     if (!entryData) {
                         throw new Error("One of the entries in the files array given to the json-files-merge-plugin could not be read: " + JSON.stringify(entryData));
                     }
-                    // try to get a JSON object from the file data
                     var entryDataAsJSON = {};
                     try {
                         entryDataAsJSON = JSON.parse(entryData);
@@ -54,28 +46,19 @@ var MergeJsonWebpackPlugin = (function () {
                     if (typeof entryDataAsJSON !== 'object') {
                         throw new Error("Not a valid object ");
                     }
-                    // let's put the data aside for now
                     mergedJsons.push(entryDataAsJSON);
                 }
                 var mergedContents = {};
                 for (var _a = 0, mergedJsons_1 = mergedJsons; _a < mergedJsons_1.length; _a++) {
                     var entryData = mergedJsons_1[_a];
-                    mergedContents = merge(mergedContents, entryData);
+                    mergedContents = _this.mergeDeep(mergedContents, entryData);
                 }
-                //return the stringify version of json
                 var retVal = JSON.stringify(mergedContents);
                 resolve(retVal);
             });
         };
-        /**
-         * writes the combined json string to file system to a folder output
-         *test
-         * @param _path
-         * @param data
-         */
         this.write = function (_path, data) {
             try {
-                // fs.writeJson(_path, data, 'utf8');
                 _this.ensureDirExists(_path)
                     .then(function () {
                     fs.writeFileSync(_path, data, 'utf8');
@@ -104,12 +87,6 @@ var MergeJsonWebpackPlugin = (function () {
                 }
             }
         };
-        /**
-         * this returns array of file paths
-         * @param pattern
-         * @returns {Promise}
-         * @private
-         */
         this._glob = function (pattern) {
             return new es6_promise_1.Promise(function (resolve, reject) {
                 new Glob(pattern, { mark: true }, function (err, matches) {
@@ -135,9 +112,6 @@ var MergeJsonWebpackPlugin = (function () {
                 _this.processGlob(groupBy);
             }
         };
-        /**
-         * this method process files options
-         */
         this.processFiles = function (files, filename) {
             _this.load(files)
                 .then(function (res) {
@@ -170,10 +144,6 @@ var MergeJsonWebpackPlugin = (function () {
                 resolve();
             });
         };
-        /**
-         *
-         * @param aPath
-         */
         this.isDirExists = function (aPath) {
             var dirname = path.dirname(aPath);
             if (fs.existsSync(dirname)) {
@@ -189,6 +159,21 @@ var MergeJsonWebpackPlugin = (function () {
         };
         this.init(options);
     }
+    MergeJsonWebpackPlugin.prototype.mergeDeep = function (target, source) {
+        if (typeof target == "object" && typeof source == "object") {
+            for (var key in source) {
+                if (typeof source[key] == "object") {
+                    if (!target[key])
+                        target[key] = {};
+                    this.mergeDeep(target[key], source[key]);
+                }
+                else {
+                    target[key] = source[key];
+                }
+            }
+        }
+        return target;
+    };
     return MergeJsonWebpackPlugin;
 }());
 module.exports = MergeJsonWebpackPlugin;
