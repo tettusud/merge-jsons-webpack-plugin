@@ -1,4 +1,4 @@
-# JsonFilesMerge
+# Merge json files
 
 Merge Json files using this webpack plugin.
 
@@ -49,10 +49,11 @@ npm i merge-jsons-webpack-plugin
                             
        ````
        
-       | Field Name      	| Description                      	|
-       |-----------------	|----------------------------------	|
-       | files           	| Array of json files to be merged 	|
-       | output.fileName 	| Name of merged output file       	|
+       
+| Field Name      	| Description                      	|
+|-----------------	|----------------------------------	|
+| files           	| Array of json files to be merged 	|
+| output.fileName 	| Name of merged output file       	|
         
         
       
@@ -76,13 +77,13 @@ npm i merge-jsons-webpack-plugin
      ````
    
    
-   | groupBy            | Array of patterns and corresponding fileNames.                                                                              |                                                                 |
-   |--------------------|-----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
-   | groupBy[].pattern  | Pattern to search files for. eg: **/en.json will pull all en.json files under current working directory and sub directories |                                                                 |
-   |                    | Do **not use** curly brackets if there is only single pattern to consider                                                   | pattern:"./node_modules/**/en.json"                             |
-   |                    | **Use** curly brackets to group more than one pattern together                                                              | pattern:"{./node_modules/**/en.json,./src/assets/i18n/en.json}" |
-   | groupBy[].fileName | output file name for the corresponding pattern.                                                                             |                                                                 |
- 
+| groupBy            | Array of patterns and corresponding fileNames.                                                                              |                                                                 |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| groupBy[].pattern  | Pattern to search files for. eg: **/en.json will pull all en.json files under current working directory and sub directories |                                                                 |
+|                    | Do **not use** curly brackets if there is only single pattern to consider                                                   | pattern:"./node_modules/**/en.json"                             |
+|                    | **Use** curly brackets to group more than one pattern together                                                              | pattern:"{./node_modules/**/en.json,./src/assets/i18n/en.json}" |
+| groupBy[].fileName | output file name for the corresponding pattern.                                                                             |                                                                 |
+
       
 ##Sample
   Please navigate to example folder
