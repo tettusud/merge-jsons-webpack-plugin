@@ -6,8 +6,7 @@
         "email": "sudharsan_tk@yahoo.co.in",
         "name": "Sudharsan Tettu"
     },
-    "contributors": [
-    ],
+    "contributors": [],
     "homepage": "https://github.com/sudharsantk/json-merge",
     "bugs": "https://github.com/sudharsantk/json-merge/issues",
     "repository": {
@@ -28,6 +27,7 @@
         "json-loader": "latest"
     },
     "devDependencies": {
+        "webpack": "2.2.1"
     },
     "main": "index.js",
     "scripts": {
