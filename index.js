@@ -40,7 +40,7 @@ var MergeJsonWebpackPlugin = (function () {
                         entryDataAsJSON = JSON.parse(entryData);
                     }
                     catch (e) {
-                        console.error('Error parsing the json', e);
+                        console.error('Error parsing the json path: ' f, ', error: ', e);
                         throw e;
                     }
                     if (typeof entryDataAsJSON !== 'object') {
