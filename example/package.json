@@ -28,6 +28,7 @@
         "json-loader": "latest"
     },
     "devDependencies": {
+        "webpack": "2.2.1"
     },
     "main": "index.js",
     "scripts": {

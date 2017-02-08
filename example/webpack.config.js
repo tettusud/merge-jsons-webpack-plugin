@@ -28,6 +28,7 @@ module.exports = {
         ],
     },
     plugins: [
+        //group by many files example
         new MergeJsonWebpackPlugin({
             "output": {
                 "groupBy": [{
@@ -36,6 +37,14 @@ module.exports = {
                 },
                     {"pattern": "./jsons/module*/es.json", "fileName": "./dist/es.json"}]
 
+            }
+        }),
+        //demonstrate arrays example
+        new MergeJsonWebpackPlugin({
+            "files": ['./jsons/arrays/array1.json',
+                './jsons/arrays/array2.json' ],
+            "output":{
+                "fileName":"./dist/arrays.json"
             }
         })
         /*  new JsonsMerge({

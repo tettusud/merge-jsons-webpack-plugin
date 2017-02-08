@@ -29,22 +29,22 @@ var MergeJsonWebpackPlugin = (function () {
                         entryData = fs.readFileSync(f, 'utf8');
                     }
                     catch (e) {
-                        console.error("One of the entries in the files array given to the json-files-merge-plugin is not accessible (does not exist, unreadable, ...)", e);
+                        console.error("File missing [", f, "]  error ", e);
                         throw e;
                     }
                     if (!entryData) {
-                        throw new Error("One of the entries in the files array given to the json-files-merge-plugin could not be read: " + JSON.stringify(entryData));
+                        throw new Error("Data appears to be empty in file [" + f + " ]");
                     }
                     var entryDataAsJSON = {};
                     try {
                         entryDataAsJSON = JSON.parse(entryData);
                     }
                     catch (e) {
-                        console.error('Error parsing the json', e);
+                        console.error("Error parsing the json file [ ", f, " ] and error is ", e);
                         throw e;
                     }
                     if (typeof entryDataAsJSON !== 'object') {
-                        throw new Error("Not a valid object ");
+                        throw new Error("Not a valid object , file  [ " + f + " ]");
                     }
                     mergedJsons.push(entryDataAsJSON);
                 }
@@ -162,7 +162,12 @@ var MergeJsonWebpackPlugin = (function () {
     MergeJsonWebpackPlugin.prototype.mergeDeep = function (target, source) {
         if (typeof target == "object" && typeof source == "object") {
             for (var key in source) {
-                if (typeof source[key] == "object") {
+                if (source[key] instanceof Array) {
+                    if (!target[key])
+                        target[key] = [];
+                    target[key] = target[key].concat(source[key]);
+                }
+                else if (typeof source[key] == "object") {
                     if (!target[key])
                         target[key] = {};
                     this.mergeDeep(target[key], source[key]);
