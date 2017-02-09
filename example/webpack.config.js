@@ -28,6 +28,11 @@ module.exports = {
         ],
     },
     plugins: [
+        //webpack2 issue fix
+        new webpack.LoaderOptionsPlugin({
+             debug: true
+        }),
+        
         //group by many files example
         new MergeJsonWebpackPlugin({
             "output": {
