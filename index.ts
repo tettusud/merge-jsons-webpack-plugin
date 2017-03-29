@@ -94,7 +94,7 @@ class MergeJsonWebpackPlugin {
     mergeDeep(target, source) {
         if (typeof target == "object" && typeof source == "object") {
             for (const key in source) {
-                if (source[key] === null && target[key] === undefined) {
+                if (source[key] === null && (target[key] === undefined || target[key] === null)) {
                      target[key] = null;
                 }else if(source[key] instanceof  Array){
                     if (!target[key]) target[key]=[];

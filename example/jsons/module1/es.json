@@ -5,7 +5,7 @@
         "class":"string",
         "grandchild":{
             "name":" grand child of module1",
-            "index":"sample"
+            "index":"second"
         }
     }
 }
