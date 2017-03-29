@@ -4,7 +4,7 @@
         "name":"child of en",
         "type":"string",
         "grandchild":{
-            "index":"1"
+            "index":null
         }
     }
 }

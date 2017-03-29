@@ -4,7 +4,8 @@
         "name":"child of en",
         "class":"string",
         "grandchild":{
-            "name":" grand child of module1"
+            "name":" grand child of module1",
+            "index":"sample"
         }
     }
 }

@@ -90,8 +90,8 @@ npm i merge-jsons-webpack-plugin
  
  ```
    cd example
-   > npm installm
-   > npm run webpack
+   > npm install
+   > npm run test
 
 ```
 

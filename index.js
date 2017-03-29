@@ -162,7 +162,10 @@ var MergeJsonWebpackPlugin = (function () {
     MergeJsonWebpackPlugin.prototype.mergeDeep = function (target, source) {
         if (typeof target == "object" && typeof source == "object") {
             for (var key in source) {
-                if (source[key] instanceof Array) {
+                if (source[key] === null && target[key] === undefined) {
+                    target[key] = null;
+                }
+                else if (source[key] instanceof Array) {
                     if (!target[key])
                         target[key] = [];
                     target[key] = target[key].concat(source[key]);

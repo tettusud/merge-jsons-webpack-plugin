@@ -4,11 +4,11 @@
  */
 "use strict";
 
+ 
 const MergeJsonWebpackPlugin = require('../index');
 
 // Webpack config
-module.exports = {
-    debug: true,
+module.exports = {  
     entry: {
         "main": "./index.js",
     },
@@ -27,20 +27,17 @@ module.exports = {
             }
         ],
     },
-    plugins: [
-        //webpack2 issue fix
-        new webpack.LoaderOptionsPlugin({
-             debug: true
-        }),
+    plugins: [       
         
         //group by many files example
+       
         new MergeJsonWebpackPlugin({
             "output": {
                 "groupBy": [{
                     "pattern": "{./node_modules/module*/en.json,./jsons/file1.json}",
                     "fileName": "./out/module1/module2/en.json"
                 },
-                    {"pattern": "./jsons/module*/es.json", "fileName": "./dist/es.json"}]
+               {"pattern": "./jsons/module*/es.json", "fileName": "./dist/es.json"}]
 
             }
         }),
