@@ -1,7 +1,7 @@
 //references https://basarat.gitbooks.io/typescript/content/docs/quick/nodejs.html
-import {Promise} from "es6-promise";
+import { Promise } from "es6-promise";
 import path = require('path');
-import Glob=require('glob');
+import Glob = require('glob');
 import fs = require('fs');
 
 const _root = path.resolve(__dirname, "./"); // project root folder
@@ -9,19 +9,18 @@ const _root = path.resolve(__dirname, "./"); // project root folder
 
 class MergeJsonWebpackPlugin {
 
+    //options for the plugin
+    options: any;
 
     constructor(options: any) {
-        this.init(options);
+        this.options = options;
     }
 
 
     apply = (compiler: any) => {
-        compiler.plugin("compile", (params: any) => {
-            console.log("merge-jsons-webpack-plugin compilation starts");
-        });
-
-        compiler.plugin("done", (params: any) => {
-            console.log("merge-jsons-webpack-plugin compilation done");
+        compiler.plugin("this-compilation", (compilation: any) => {
+            console.log("MergeJsonWebpackPlugin compiling....");
+            this.init();
         });
     }
 
@@ -50,12 +49,12 @@ class MergeJsonWebpackPlugin {
                     entryData = fs.readFileSync(f, 'utf8');
 
                 } catch (e) {
-                    console.error("File missing [",f,"]  error ", e);
+                    console.error("File missing [", f, "]  error ", e);
                     throw e;
                 }
 
                 if (!entryData) {
-                    throw new Error("Data appears to be empty in file ["+f +" ]");
+                    throw new Error("Data appears to be empty in file [" + f + " ]");
                 }
 
                 // try to get a JSON object from the file data
@@ -64,12 +63,12 @@ class MergeJsonWebpackPlugin {
                 try {
                     entryDataAsJSON = JSON.parse(entryData);
                 } catch (e) {
-                    console.error("Error parsing the json file [ ",f," ] and error is ", e);
+                    console.error("Error parsing the json file [ ", f, " ] and error is ", e);
                     throw e;
                 }
 
                 if (typeof entryDataAsJSON !== 'object') {
-                    throw new Error("Not a valid object , file  [ "+f+" ]");
+                    throw new Error("Not a valid object , file  [ " + f + " ]");
                 }
 
                 // let's put the data aside for now
@@ -91,20 +90,20 @@ class MergeJsonWebpackPlugin {
      * deep merging of json child object
      * code contributed by @leonardopurro
      */
-    mergeDeep(target, source) {
+    mergeDeep = (target, source) => {
         if (typeof target == "object" && typeof source == "object") {
             for (const key in source) {
                 if (source[key] === null && (target[key] === undefined || target[key] === null)) {
-                     target[key] = null;
-                }else if(source[key] instanceof  Array){
-                    if (!target[key]) target[key]=[];
+                    target[key] = null;
+                } else if (source[key] instanceof Array) {
+                    if (!target[key]) target[key] = [];
                     //concatenate arrays
-                    target[key]= target[key].concat(source[key]);
-                }else if (typeof source[key] == "object") {
-                    if (!target[key]) target[key]={};
+                    target[key] = target[key].concat(source[key]);
+                } else if (typeof source[key] == "object") {
+                    if (!target[key]) target[key] = {};
                     this.mergeDeep(target[key], source[key]);
                 } else {
-                   target[key]=source[key];
+                    target[key] = source[key];
                 }
             }
         }
@@ -131,25 +130,6 @@ class MergeJsonWebpackPlugin {
         }
     }
 
-    resolve = (options: any) => {
-        let output = options.output;
-        let pattern = "";
-
-        if (output.groupBy) {
-            let groupBy: any = output.groupBy;
-
-            if (!Array.isArray(groupBy) || groupBy.length == 0) {
-                throw new Error('\"groupBy\" must be a non empty array, eg  \"groupBy\":[{\"pattern":\"**/**\",\"fileName\":\"sampleOutput\"}]')
-            }
-            let matches = [];
-            for (let g of groupBy) {
-                if (!g.pattern) {
-                    throw new Error('When you are merging using \"groupBy\" options ,please specifiy a file/directory pattern to group by ' + JSON.stringify(g));
-                }
-                matches.push(this._glob(g.pattern))
-            }
-        }
-    }
 
     /**
      * this returns array of file paths
@@ -161,7 +141,7 @@ class MergeJsonWebpackPlugin {
 
         return new Promise((resolve, reject) => {
 
-            new Glob(pattern, {mark: true}, function (err:any, matches:any) {
+            new Glob(pattern, { mark: true }, function (err: any, matches: any) {
 
                 if (err) {
                     throw err;
@@ -173,11 +153,10 @@ class MergeJsonWebpackPlugin {
 
     }
 
-    init = (options: any) => {
-
-        let files = options.files;
-        let output = options.output;
-        let groupBy = output.groupBy;
+    init = () => {
+        let files  = this.options.files;
+        let output = this.options.output;
+        let groupBy= output.groupBy;
 
         if (files && groupBy) {
             throw new Error('Specify either files (all the files to merge with filename) or groupBy to specifiy a pattern(s)' +
@@ -196,10 +175,9 @@ class MergeJsonWebpackPlugin {
      */
     processFiles = (files: Array<string>, filename: string) => {
         this.load(files)
-            .then((res) => {
-                    this.write(filename, res);
-                }
-            )
+                    .then((res) => {
+                        this.write(filename, res);
+                    });
     }
 
     processGlob = (groupBy: any) => {
@@ -208,7 +186,6 @@ class MergeJsonWebpackPlugin {
         }
 
         for (let g of groupBy) {
-
             let pattern = g.pattern;
             let fileName = g.fileName;
             this._glob(pattern)
@@ -248,4 +225,4 @@ class MergeJsonWebpackPlugin {
     }
 }
 
-export=MergeJsonWebpackPlugin;
+export =MergeJsonWebpackPlugin;

@@ -28,11 +28,14 @@
         "json-loader": "latest"
     },
     "devDependencies": {
-        "webpack": "2.2.1"
+        "webpack": "2.2.1",
+        "webpack-dev-server": "2.4.1"
     },
     "main": "index.js",
     "scripts": {
         "webpack": "webpack",
-        "test": "webpack"
+        "test": "webpack",
+        "start": "webpack-dev-server --inline --progress --port 8080"
+
     }
 }

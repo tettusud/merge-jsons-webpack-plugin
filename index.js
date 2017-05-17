@@ -8,11 +8,9 @@ var MergeJsonWebpackPlugin = (function () {
     function MergeJsonWebpackPlugin(options) {
         var _this = this;
         this.apply = function (compiler) {
-            compiler.plugin("compile", function (params) {
-                console.log("merge-jsons-webpack-plugin compilation starts");
-            });
-            compiler.plugin("done", function (params) {
-                console.log("merge-jsons-webpack-plugin compilation done");
+            compiler.plugin("this-compilation", function (compilation) {
+                console.log("MergeJsonWebpackPlugin compiling....");
+                _this.init();
             });
         };
         this.load = function (files) {
@@ -57,6 +55,29 @@ var MergeJsonWebpackPlugin = (function () {
                 resolve(retVal);
             });
         };
+        this.mergeDeep = function (target, source) {
+            if (typeof target == "object" && typeof source == "object") {
+                for (var key in source) {
+                    if (source[key] === null && (target[key] === undefined || target[key] === null)) {
+                        target[key] = null;
+                    }
+                    else if (source[key] instanceof Array) {
+                        if (!target[key])
+                            target[key] = [];
+                        target[key] = target[key].concat(source[key]);
+                    }
+                    else if (typeof source[key] == "object") {
+                        if (!target[key])
+                            target[key] = {};
+                        _this.mergeDeep(target[key], source[key]);
+                    }
+                    else {
+                        target[key] = source[key];
+                    }
+                }
+            }
+            return target;
+        };
         this.write = function (_path, data) {
             try {
                 _this.ensureDirExists(_path)
@@ -69,24 +90,6 @@ var MergeJsonWebpackPlugin = (function () {
                 throw e;
             }
         };
-        this.resolve = function (options) {
-            var output = options.output;
-            var pattern = "";
-            if (output.groupBy) {
-                var groupBy = output.groupBy;
-                if (!Array.isArray(groupBy) || groupBy.length == 0) {
-                    throw new Error('\"groupBy\" must be a non empty array, eg  \"groupBy\":[{\"pattern":\"**/**\",\"fileName\":\"sampleOutput\"}]');
-                }
-                var matches = [];
-                for (var _i = 0, groupBy_1 = groupBy; _i < groupBy_1.length; _i++) {
-                    var g = groupBy_1[_i];
-                    if (!g.pattern) {
-                        throw new Error('When you are merging using \"groupBy\" options ,please specifiy a file/directory pattern to group by ' + JSON.stringify(g));
-                    }
-                    matches.push(_this._glob(g.pattern));
-                }
-            }
-        };
         this._glob = function (pattern) {
             return new es6_promise_1.Promise(function (resolve, reject) {
                 new Glob(pattern, { mark: true }, function (err, matches) {
@@ -97,9 +100,9 @@ var MergeJsonWebpackPlugin = (function () {
                 });
             });
         };
-        this.init = function (options) {
-            var files = options.files;
-            var output = options.output;
+        this.init = function () {
+            var files = _this.options.files;
+            var output = _this.options.output;
             var groupBy = output.groupBy;
             if (files && groupBy) {
                 throw new Error('Specify either files (all the files to merge with filename) or groupBy to specifiy a pattern(s)' +
@@ -133,8 +136,8 @@ var MergeJsonWebpackPlugin = (function () {
                     _this.write(fileName, res);
                 });
             };
-            for (var _i = 0, groupBy_2 = groupBy; _i < groupBy_2.length; _i++) {
-                var g = groupBy_2[_i];
+            for (var _i = 0, groupBy_1 = groupBy; _i < groupBy_1.length; _i++) {
+                var g = groupBy_1[_i];
                 _loop_1(g);
             }
         };
@@ -157,31 +160,8 @@ var MergeJsonWebpackPlugin = (function () {
                 console.error(' unable to create dir ', dirname, e);
             }
         };
-        this.init(options);
+        this.options = options;
     }
-    MergeJsonWebpackPlugin.prototype.mergeDeep = function (target, source) {
-        if (typeof target == "object" && typeof source == "object") {
-            for (var key in source) {
-                if (source[key] === null && (target[key] === undefined || target[key] === null)) {
-                    target[key] = null;
-                }
-                else if (source[key] instanceof Array) {
-                    if (!target[key])
-                        target[key] = [];
-                    target[key] = target[key].concat(source[key]);
-                }
-                else if (typeof source[key] == "object") {
-                    if (!target[key])
-                        target[key] = {};
-                    this.mergeDeep(target[key], source[key]);
-                }
-                else {
-                    target[key] = source[key];
-                }
-            }
-        }
-        return target;
-    };
     return MergeJsonWebpackPlugin;
 }());
 module.exports = MergeJsonWebpackPlugin;
