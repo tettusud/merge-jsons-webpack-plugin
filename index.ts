@@ -5,7 +5,7 @@ import Glob = require('glob');
 import fs = require('fs');
 
 const _root = path.resolve(__dirname, "./"); // project root folder
-
+const UTF8_ENCODING="utf8";
 
 class MergeJsonWebpackPlugin {
 
@@ -46,7 +46,12 @@ class MergeJsonWebpackPlugin {
                 let entryData = undefined;
 
                 try {
-                    entryData = fs.readFileSync(f, 'utf8');
+                    let encoding= this.options.encoding;
+                    if(!encoding){
+                        encoding=UTF8_ENCODING;
+                    }
+                    console.log('encodin ',encoding);
+                    entryData = fs.readFileSync(f, encoding);
 
                 } catch (e) {
                     console.error("File missing [", f, "]  error ", e);

@@ -32,6 +32,7 @@ module.exports = {
         //group by many files example
        
         new MergeJsonWebpackPlugin({
+            "encoding":"ascii",
             "output": {
                 "groupBy": [{
                     "pattern": "{./node_modules/module*/en.json,./jsons/file1.json}",

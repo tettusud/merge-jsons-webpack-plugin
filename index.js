@@ -4,6 +4,7 @@ var path = require("path");
 var Glob = require("glob");
 var fs = require("fs");
 var _root = path.resolve(__dirname, "./");
+var UTF8_ENCODING = "utf8";
 var MergeJsonWebpackPlugin = (function () {
     function MergeJsonWebpackPlugin(options) {
         var _this = this;
@@ -24,7 +25,12 @@ var MergeJsonWebpackPlugin = (function () {
                     }
                     var entryData = undefined;
                     try {
-                        entryData = fs.readFileSync(f, 'utf8');
+                        var encoding = _this.options.encoding;
+                        if (!encoding) {
+                            encoding = UTF8_ENCODING;
+                        }
+                        console.log('encodin ', encoding);
+                        entryData = fs.readFileSync(f, encoding);
                     }
                     catch (e) {
                         console.error("File missing [", f, "]  error ", e);
