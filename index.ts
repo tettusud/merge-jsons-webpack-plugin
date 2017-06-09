@@ -50,7 +50,6 @@ class MergeJsonWebpackPlugin {
                     if(!encoding){
                         encoding=UTF8_ENCODING;
                     }
-                    console.log('encodin ',encoding);
                     entryData = fs.readFileSync(f, encoding);
 
                 } catch (e) {
