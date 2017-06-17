@@ -5,7 +5,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "target": "es5"
+        "target": "es6"
     },
     "files": [
         "./index.ts"
