@@ -43,7 +43,6 @@
         "build":"tsc",
         "post-install": "typings install",
         "deploy": "npm publish"
-    },
-    "files": {}
+    }
 }
 

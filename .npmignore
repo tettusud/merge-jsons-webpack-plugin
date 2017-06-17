@@ -4,6 +4,7 @@ build/
 __build__/
 .tmp/
 
+example/
 
 *.ts
 *.tgz
@@ -43,3 +44,5 @@ pids
 #typings
 tsconfig.json
 typings.json
+
+.editorconfig
