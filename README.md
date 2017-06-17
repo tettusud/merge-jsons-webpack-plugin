@@ -29,7 +29,7 @@ npm i merge-jsons-webpack-plugin
         })
 ```
 
-##Details
+## Details
   You can specify either files or  groupBy under output.
   
   1. **By files**
@@ -52,7 +52,7 @@ npm i merge-jsons-webpack-plugin
    | Field Name      	| Description                      	|
    |-----------------	|----------------------------------	|
    | files           	| Array of json files to be merged 	|
-   | output.fileName 	| Name of merged output file       	|
+   | output.fileName 	| Name of merged output file ,relative path from output.path entry      	|
    | encoding       	| Optional,encoding to be used default is utf-8	|        
         
       
@@ -82,10 +82,18 @@ npm i merge-jsons-webpack-plugin
 | groupBy[].pattern  | Pattern to search files for. eg: **/en.json will pull all en.json files under current working directory and sub directories |                                                                 |
 |                    | Do **not use** curly brackets if there is only single pattern to consider                                                   | pattern:"./node_modules/**/en.json"                             |
 |                    | **Use** curly brackets to group more than one pattern together                                                              | pattern:"{./node_modules/**/en.json,./src/assets/i18n/en.json}" |
-| groupBy[].fileName | output file name for the corresponding pattern.                                                                             |                                                                 |
+| groupBy[].fileName | output file name for the corresponding pattern.Relative path from output.path entry                                                                             |                                                                 |
 | encoding      	| Optional,encoding to be used default is utf-8	|       |
-      
-##Sample
+
+## Change Logs   
+   
+   | Version      	    | Changes                           |
+   |--------------------|-----------------------------------|
+   | 1.0.8           	| Error handling improved. Now **fileName** is relative path to output path specified 	|
+    
+        
+
+## Sample
   Please navigate to example folder
  
  ```
