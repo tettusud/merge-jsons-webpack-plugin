@@ -23,7 +23,7 @@ class MergeJsonWebpackPlugin {
 
         compiler.plugin('emit', (compilation, done) => {
             
-            console.log('MergetJsonsWebpackPlugin emit...');
+            console.log('MergeJsonsWebpackPlugin emit...');
 
             let files = this.options.files;
             let output = this.options.output;
