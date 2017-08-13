@@ -1,33 +1,27 @@
 var path = require("path");
-var MergeJsonWebpackPlugin =require('../index');
+var MergeJsonWebpackPlugin =require('merge-jsons-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
   entry: {
-    app: ["./index.js"]
+    app: ["./app/main.js"]
   },
   output: {
     path: path.resolve(__dirname, "build"),
     publicPath: "/assets/",
     filename: "bundle.js"
   },
-  plugins:[
+plugins:[
+   new HtmlWebpackPlugin({  // Also generate a test.html
+      filename: 'index.html',
+      template: 'app/index.html'
+    }),
       new MergeJsonWebpackPlugin({
-            "files": ['./jsons/file1.json',
-                './jsons/file3.json',
-                './jsons/file2.json'],
+            "files": ['app/jsons/file1.json',
+                'app/jsons/file2.json', 'app/jsons/file3.json'                ],
             "output":{
-                "fileName":"./jsons/result.json"
+                "fileName":"jsons/result.json"
             }
-        }),
-        new MergeJsonWebpackPlugin({
-            "encoding":"ascii",
-            "output": {
-                "groupBy": [{
-                    "pattern": "{./node_modules/module*/en.json,./jsons/file1.json}",
-                    "fileName": "./out/module1/module2/en.json"
-                },
-               {"pattern": "./jsons/module*/es.json", "fileName": "./dist/es.json"}]
-
-            }
-        })
+        })        
   ]
 };

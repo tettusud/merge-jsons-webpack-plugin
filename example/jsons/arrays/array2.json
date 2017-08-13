@@ -1,9 +1,0 @@
-{
-    "children": [
-        {
-            "role": "link",
-            "title": "Sub three",
-            "routerLink": "/spog-module-seed/sub-one"
-        }
-    ]
-}

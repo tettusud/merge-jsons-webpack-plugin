@@ -11,7 +11,8 @@ class MergeJsonWebpackPlugin {
 
     //options for the plugin
     options: any;
-    
+    fileDependencies: Array<string>;
+
     constructor(options: any) {
         this.options = options;
         this.options.encoding = this.options.encoding != null ? this.options.encoding : UTF8_ENCODING;
@@ -21,9 +22,9 @@ class MergeJsonWebpackPlugin {
     apply = (compiler: any) => {
 
 
-        compiler.plugin('emit', (compilation, done) => {
-            
-            console.log('MergetJsonsWebpackPlugin emit...');
+        compiler.plugin('emit', (compilation,done) => {
+
+            console.log('MergetJsonsWebpackPlugin compilation started...');
 
             let files = this.options.files;
             let output = this.options.output;
@@ -33,12 +34,10 @@ class MergeJsonWebpackPlugin {
                 compilation.errors.push('MergeJsonWebpackPlugin: Specify either files (all the files to merge with filename) or groupBy to specifiy a pattern(s)' +
                     'of file(s) to merge. ');
             }
-            
+
             if (files) {
                 let outputPath = output.fileName;
-                this.processFiles(compilation, files, outputPath).then((result: any) => {
-                    done();
-                });
+                this.processFiles(compilation, files, outputPath).then((result: any) => { done(); });
             } else if (groupBy) {
                 if (groupBy.length == 0) {
                     compilation.errors.push('MergeJsonWebpackPlugin: \"groupBy\" must be non empty object');
@@ -48,13 +47,23 @@ class MergeJsonWebpackPlugin {
                     let pattern = globs.pattern;
                     let outputPath = globs.fileName;
                     this._glob(pattern).then((files) => {
-                        this.processFiles(compilation, files, outputPath).then((result: any) => {
-                            done();
-                        });
+                        this.processFiles(compilation, files, outputPath).then((result: any) => { done(); });
                     });
                 });
 
             }
+            console.log('MergetJsonsWebpackPlugin compilation completed...');
+        });
+
+        compiler.plugin("after-emit", (compilation, callback) => {
+            console.log("MergetJsonsWebpackPlugin emit starts...")
+            if (this.fileDependencies != null) {
+                this.fileDependencies.forEach((f) => {
+                    compilation.fileDependencies.push(path.join(compiler.context, f));
+                });
+            }
+            console.log("MergetJsonsWebpackPlugin emit completed...")
+            callback();
         });
     }
 
@@ -62,6 +71,9 @@ class MergeJsonWebpackPlugin {
      * Process array of files 
      */
     processFiles = (compilation: any, files: Array<string>, outputPath: string) => {
+        //add files to watcher
+        this.fileDependencies = files;
+        //handle files
         var fileContents = files.map(this.readFile);
         let mergedContents: any = {};
         return Promise.all(fileContents)
@@ -104,7 +116,6 @@ class MergeJsonWebpackPlugin {
             let entryData = undefined;
 
             try {
-
                 entryData = fs.readFileSync(f, this.options.encoding);
 
             } catch (e) {
