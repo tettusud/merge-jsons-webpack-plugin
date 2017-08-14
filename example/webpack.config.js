@@ -28,12 +28,24 @@ module.exports = {
       "output": {
         "groupBy": [
           {
-            "pattern": "{app/groupby/lang/en.json,app/groupby/lang/de.json}",
-            "fileName": "jsons/languages.json"
-          },
-          {
             "pattern": "app/groupby/countries/*.json",
             "fileName": "jsons/countries.json"
+          }
+        ]
+      }
+    }),
+    //lang views
+    new MergeJsonWebpackPlugin({
+      "encoding": "utf8",
+      "output": {
+        "groupBy": [
+          {
+            "pattern": "app/groupby/lang/**/locales/en.json",
+            "fileName": "locales/en.json"
+          },
+          {
+            "pattern": "app/groupby/lang/**/locales/fr.json",
+            "fileName": "locales/fr.json"
           }
         ]
       }

@@ -6,9 +6,14 @@ $(document).ready(function () {
             $("#byFiles").append("<strong>"+i+"</strong>:"+field + " <p>");
         });
     });
-    $.getJSON("assets/jsons/languages.json", function (result) {
+    $.getJSON("assets/locales/en.json", function (result) {
         $.each(result, function (i, field) {
-            $("#lang").append("<strong>"+i+"</strong>:"+field + " <p>");
+            $("#en").append("<strong>"+i+"</strong>:"+field + " <p>");
+        });
+    });
+     $.getJSON("assets/locales/fr.json", function (result) {
+        $.each(result, function (i, field) {
+            $("#fr").append("<strong>"+i+"</strong>:"+field + " <p>");
         });
     });
       $.getJSON("assets/jsons/countries.json", function (result) {           
