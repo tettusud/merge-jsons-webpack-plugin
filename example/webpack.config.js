@@ -1,5 +1,5 @@
 var path = require("path");
-var MergeJsonWebpackPlugin = require('../index.js');
+var MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {

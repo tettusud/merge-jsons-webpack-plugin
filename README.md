@@ -88,7 +88,7 @@ npm i merge-jsons-webpack-plugin
 | 1.0.8           	| Error handling improved. Now **fileName** is relative path to output path specified   | 
 | 1.0.10           	| File watching feature added, result will be automatically refreshed if json files are modified | 	
     
-        
+| 1.0.11           	| Publish issues with previous version |   
 
 ## Sample
   Please navigate to example folder

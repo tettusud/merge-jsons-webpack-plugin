@@ -7,6 +7,7 @@ const _root = path.resolve(__dirname, "./");
 const UTF8_ENCODING = "utf8";
 class MergeJsonWebpackPlugin {
     constructor(options) {
+        this.fileDependencies = [];
         this.apply = (compiler) => {
             compiler.plugin('emit', (compilation, done) => {
                 console.log('MergetJsonsWebpackPlugin compilation started...');
@@ -47,7 +48,7 @@ class MergeJsonWebpackPlugin {
             });
         };
         this.processFiles = (compilation, files, outputPath) => {
-            this.fileDependencies = files;
+            this.fileDependencies = this.fileDependencies.concat(files);
             var fileContents = files.map(this.readFile);
             let mergedContents = {};
             return es6_promise_1.Promise.all(fileContents)
