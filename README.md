@@ -32,36 +32,32 @@ npm i merge-jsons-webpack-plugin
 ## Details
   You can specify either files or  groupBy under output.
   
-  1. **By files**
-  
+1. **By files**  
        If you want to merge group of files use like this.
       
-       ````javascript
-               new MergeJsonWebpackPlugin({                                           
-                                            "files": ['./jsons/file1.json',  
-                                                      './jsons/file3.json',                                                
-                                                      './jsons/file2.json'],
-                                            "output":{
-                                                 "fileName":"./dist/result.json"                         
-                                           }
-                                 })
-                            
-       ````
+```
+    new MergeJsonWebpackPlugin
+       ({                                           
+            "files": ['./jsons/file1.json','./jsons/file3.json','./jsons/file2.json'],
+            "output":{
+                      "fileName":"./dist/result.json"                         
+                     }
+       })
+                       
+```
        
        
-   | Field Name      	| Description                      	|
-   |-----------------	|----------------------------------	|
-   | files           	| Array of json files to be merged 	|
-   | output.fileName 	| Name of merged output file ,relative path from output.path entry      	|
-   | encoding       	| Optional,encoding to be used default is utf-8	|        
+| Field Name      	| Description                      	|
+|-----------------	|----------------------------------	|
+| files           	| Array of json files to be merged 	|
+| output.fileName 	| Name of merged output file ,relative path from output.path entry      	|
+| encoding       	| Optional,encoding to be used default is utf-8	|        
         
       
-  2. **By Patterns** 
-       
-       This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern.               
-                  You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
+2. **By Patterns**        
+       This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern.       You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
                   
-       ````javascript
+```
        new MergeJsonWebpackPlugin({
                    "encoding":"ascii",
                    "output":{
@@ -74,7 +70,7 @@ npm i merge-jsons-webpack-plugin
                                ]        
                            }
                   })  
-     ````
+```
    
    
 | groupBy            | Array of patterns and corresponding fileNames.                                                                              |                                                                 |
@@ -87,9 +83,10 @@ npm i merge-jsons-webpack-plugin
 
 ## Change Logs   
    
-   | Version      	    | Changes                           |
-   |--------------------|-----------------------------------|
-   | 1.0.8           	| Error handling improved. Now **fileName** is relative path to output path specified 	|
+| Version      	    | Changes                           |
+|--------------------|-----------------------------------|
+| 1.0.8           	| Error handling improved. Now **fileName** is relative path to output path specified   | 
+| 1.0.10           	| File watching feature added, result will be automatically refreshed if json files are modified | 	
     
         
 
