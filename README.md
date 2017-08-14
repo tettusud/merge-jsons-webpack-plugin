@@ -96,11 +96,15 @@ npm i merge-jsons-webpack-plugin
 ## Sample
   Please navigate to example folder
  
- ```
+```
    cd example
    > npm install
-   > npm run test
+   > npm start
 
+```
+  Access the web application at 
+```
+ http://localhost:8080
 ```
 
 ##References

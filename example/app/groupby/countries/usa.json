@@ -1,0 +1,9 @@
+{
+   "countries":[
+       {
+           "name":"USA",
+           "currency":"Dollar",
+           "language":"English"
+       }
+   ]
+}

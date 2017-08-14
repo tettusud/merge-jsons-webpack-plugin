@@ -11,7 +11,7 @@ class MergeJsonWebpackPlugin {
 
     //options for the plugin
     options: any;
-    fileDependencies: Array<string>;
+    fileDependencies: Array<string>=[];
 
     constructor(options: any) {
         this.options = options;
@@ -72,7 +72,7 @@ class MergeJsonWebpackPlugin {
      */
     processFiles = (compilation: any, files: Array<string>, outputPath: string) => {
         //add files to watcher
-        this.fileDependencies = files;
+        this.fileDependencies = this.fileDependencies.concat(files);
         //handle files
         var fileContents = files.map(this.readFile);
         let mergedContents: any = {};
