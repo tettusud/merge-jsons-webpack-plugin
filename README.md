@@ -115,6 +115,6 @@ new MergeJsonWebpackPlugin({
  http://localhost:8080
 ```
 
-##References
+## References
 
  - https://www.npmjs.com/package/glob

@@ -1,5 +1,5 @@
 var path = require("path");
-var MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
+var MergeJsonWebpackPlugin = require('../index.js');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -32,6 +32,9 @@ module.exports = {
             "fileName": "jsons/countries.json"
           }
         ]
+      },
+      "globOptions":{
+        "nosort":true
       }
     }),
     //lang views

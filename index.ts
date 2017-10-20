@@ -39,10 +39,12 @@ class MergeJsonWebpackPlugin {
                 let outputPath = output.fileName;
                 this.processFiles(compilation, files, outputPath).then((result: any) => { done(); });
             } else if (groupBy) {
-                let globOptions = this.options.globOptions != null ? this.options.globOptions : {};
+              
                 if (groupBy.length == 0) {
                     compilation.errors.push('MergeJsonWebpackPlugin: \"groupBy\" must be non empty object');
                 }
+
+                let globOptions = this.options.globOptions || {};
 
                 groupBy.forEach((globs: any) => {
                     let pattern = globs.pattern;

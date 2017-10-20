@@ -1,0 +1,9 @@
+{
+    "countries":[
+        {
+            "name":"Canada",
+            "currency":"Dollars",
+            "language":"French"
+        }
+    ]
+ }
