@@ -18,15 +18,17 @@ npm i merge-jsons-webpack-plugin
 ```
 
 ```javascript
- var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin")
- new MergeJsonWebpackPlugin({
-            "files": ['./jsons/file1.json',
-                './jsons/file3.json',
-                './jsons/file2.json'],
-            "output":{
-                "fileName":"./dist/result.json"
-            }
-        })
+var MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
+new MergeJsonWebpackPlugin({
+    "files": [
+        "./jsons/file1.json",
+        "./jsons/file3.json",
+        "./jsons/file2.json"
+    ],
+    "output": {
+        "fileName": "./dist/result.json"
+    }
+});
 ```
 
 ## Details
@@ -34,16 +36,18 @@ npm i merge-jsons-webpack-plugin
   
 1. **By files**  
        If you want to merge group of files use like this.
-      
-```
-    new MergeJsonWebpackPlugin
-       ({                                           
-            "files": ['./jsons/file1.json','./jsons/file3.json','./jsons/file2.json'],
-            "output":{
-                      "fileName":"./dist/result.json"                         
-                     }
-       })
-                       
+
+```javascript
+new MergeJsonWebpackPlugin({
+    "files": [
+        "./jsons/file1.json",
+        "./jsons/file3.json",
+        "./jsons/file2.json"
+    ],
+    "output": {
+        "fileName": "./dist/result.json"
+    }
+});
 ```
        
        
@@ -55,21 +59,27 @@ npm i merge-jsons-webpack-plugin
         
       
 2. **By Patterns**        
-       This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern.       You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
+       This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern. You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
                   
-```
-       new MergeJsonWebpackPlugin({
-                   "encoding":"ascii",
-                   "output":{
-                     "groupBy":[
-                                   { "pattern":"{./jsons/module*/en.json,./jsons/file1.json}", 
-                                      "fileName":"./dist/en.json" 
-                                   },
-                                   { "pattern":"{./jsons/module*/es.json,./jsons/file2.json}", 
-                                       "fileName":"./dist/es.json" }
-                               ]        
-                           }
-                  })  
+```javascript
+new MergeJsonWebpackPlugin({
+    "encoding": "ascii",
+    "output": {
+        "groupBy": [
+            {
+                "pattern": "{./jsons/module*/en.json,./jsons/file1.json}", 
+                "fileName": "./dist/en.json" 
+            },
+            {
+                "pattern": "{./jsons/module*/es.json,./jsons/file2.json}", 
+                "fileName":"./dist/es.json"
+            }
+        ]
+    },
+    "globOptions": {
+        "nosort": true
+    }
+});
 ```
    
    
@@ -79,15 +89,17 @@ npm i merge-jsons-webpack-plugin
 |                    | Do **not use** curly brackets if there is only single pattern to consider                                                   | pattern:"./node_modules/**/en.json"                             |
 |                    | **Use** curly brackets to group more than one pattern together                                                              | pattern:"{./node_modules/**/en.json,./src/assets/i18n/en.json}" |
 | groupBy[].fileName | output file name for the corresponding pattern.Relative path from output.path entry                                                                             |                                                                 |
-| encoding      	| Optional,encoding to be used default is utf-8	|       |
+| encoding      	| Optional, encoding to be used default is utf-8	|       |
+| globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior	|       |
 
 ## Change Logs   
    
 | Version      	    | Changes                           |
 |--------------------|-----------------------------------|
-| 1.0.8           	| Error handling improved. Now **fileName** is relative path to output path specified   | 
-| 1.0.10           	| File watching feature added, result will be automatically refreshed if json files are modified | 	    
-| 1.0.11           	| Publish issues with previous version |   
+| 1.0.8           	| Error handling improved. Now **fileName** is relative path to output path specified   |
+| 1.0.10           	| File watching feature added, result will be automatically refreshed if json files are modified |
+| 1.0.11           	| Publish issues with previous version |
+| 1.0.12           	| Added glob options handling |
 
 ## Sample
   Please navigate to example folder

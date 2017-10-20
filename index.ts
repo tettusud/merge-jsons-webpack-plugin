@@ -39,6 +39,7 @@ class MergeJsonWebpackPlugin {
                 let outputPath = output.fileName;
                 this.processFiles(compilation, files, outputPath).then((result: any) => { done(); });
             } else if (groupBy) {
+                let globOptions = this.options.globOptions != null ? this.options.globOptions : {};
                 if (groupBy.length == 0) {
                     compilation.errors.push('MergeJsonWebpackPlugin: \"groupBy\" must be non empty object');
                 }
@@ -46,7 +47,7 @@ class MergeJsonWebpackPlugin {
                 groupBy.forEach((globs: any) => {
                     let pattern = globs.pattern;
                     let outputPath = globs.fileName;
-                    this._glob(pattern).then((files) => {
+                    this._glob(pattern, globOptions).then((files) => {
                         this.processFiles(compilation, files, outputPath).then((result: any) => { done(); });
                     });
                 });
@@ -68,13 +69,13 @@ class MergeJsonWebpackPlugin {
     }
 
     /**
-     * Process array of files 
+     * Process array of files
      */
     processFiles = (compilation: any, files: Array<string>, outputPath: string) => {
         //add files to watcher
         this.fileDependencies = this.fileDependencies.concat(files);
         //handle files
-        var fileContents = files.map(this.readFile);
+        const fileContents = files.map(this.readFile);
         let mergedContents: any = {};
         return Promise.all(fileContents)
             .then((contents) => {
@@ -101,7 +102,7 @@ class MergeJsonWebpackPlugin {
 
 
     /**
-     * this method reads the file and returns content as json object 
+     * this method reads the file and returns content as json object
      */
     readFile = (f: string) => {
 
@@ -178,12 +179,14 @@ class MergeJsonWebpackPlugin {
     /**
      * this returns array of file paths
      * @param pattern
+     * @param options
      * @returns {Promise}
      * @private
      */
-    private _glob = (pattern: string): Promise<Array<string>> => {
+    private _glob = (pattern: string, options?: any): Promise<Array<string>> => {
         return new Promise((resolve, reject) => {
-            new Glob(pattern, { mark: true }, function (err: any, matches: any) {
+            const defaultOptions = { mark: true };
+            new Glob(pattern, { ...options, ...defaultOptions }, function (err: any, matches: any) {
                 if (err) {
                     reject(err);
                 }
@@ -193,4 +196,4 @@ class MergeJsonWebpackPlugin {
     }
 }
 
-export =MergeJsonWebpackPlugin;
+export = MergeJsonWebpackPlugin;

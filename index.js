@@ -23,13 +23,14 @@ class MergeJsonWebpackPlugin {
                     this.processFiles(compilation, files, outputPath).then((result) => { done(); });
                 }
                 else if (groupBy) {
+                    let globOptions = this.options.globOptions != null ? this.options.globOptions : {};
                     if (groupBy.length == 0) {
                         compilation.errors.push('MergeJsonWebpackPlugin: \"groupBy\" must be non empty object');
                     }
                     groupBy.forEach((globs) => {
                         let pattern = globs.pattern;
                         let outputPath = globs.fileName;
-                        this._glob(pattern).then((files) => {
+                        this._glob(pattern, globOptions).then((files) => {
                             this.processFiles(compilation, files, outputPath).then((result) => { done(); });
                         });
                     });
@@ -49,7 +50,7 @@ class MergeJsonWebpackPlugin {
         };
         this.processFiles = (compilation, files, outputPath) => {
             this.fileDependencies = this.fileDependencies.concat(files);
-            var fileContents = files.map(this.readFile);
+            const fileContents = files.map(this.readFile);
             let mergedContents = {};
             return es6_promise_1.Promise.all(fileContents)
                 .then((contents) => {
@@ -128,9 +129,10 @@ class MergeJsonWebpackPlugin {
             }
             return target;
         };
-        this._glob = (pattern) => {
+        this._glob = (pattern, options) => {
             return new es6_promise_1.Promise((resolve, reject) => {
-                new Glob(pattern, { mark: true }, function (err, matches) {
+                const defaultOptions = { mark: true };
+                new Glob(pattern, Object.assign({}, options, defaultOptions), function (err, matches) {
                     if (err) {
                         reject(err);
                     }
