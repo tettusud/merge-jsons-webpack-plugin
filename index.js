@@ -10,7 +10,7 @@ class MergeJsonWebpackPlugin {
         this.fileDependencies = [];
         this.apply = (compiler) => {
             compiler.plugin('emit', (compilation, done) => {
-                console.log('MergetJsonsWebpackPlugin compilation started...');
+                console.log('MergeJsonsWebpackPlugin compilation started...');
                 let files = this.options.files;
                 let output = this.options.output;
                 let groupBy = output.groupBy;
@@ -35,16 +35,16 @@ class MergeJsonWebpackPlugin {
                         });
                     });
                 }
-                console.log('MergetJsonsWebpackPlugin compilation completed...');
+                console.log('MergeJsonsWebpackPlugin compilation completed...');
             });
             compiler.plugin("after-emit", (compilation, callback) => {
-                console.log("MergetJsonsWebpackPlugin emit starts...");
+                console.log("MergeJsonsWebpackPlugin emit starts...");
                 if (this.fileDependencies != null) {
                     this.fileDependencies.forEach((f) => {
                         compilation.fileDependencies.push(path.join(compiler.context, f));
                     });
                 }
-                console.log("MergetJsonsWebpackPlugin emit completed...");
+                console.log("MergeJsonsWebpackPlugin emit completed...");
                 callback();
             });
         };
