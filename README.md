@@ -39,6 +39,7 @@ new MergeJsonWebpackPlugin({
 
 ```javascript
 new MergeJsonWebpackPlugin({
+    "debug":true,
     "files": [
         "./jsons/file1.json",
         "./jsons/file3.json",
@@ -56,7 +57,7 @@ new MergeJsonWebpackPlugin({
 | files           	| Array of json files to be merged 	|
 | output.fileName 	| Name of merged output file ,relative path from output.path entry      	|
 | encoding       	| Optional,encoding to be used default is utf-8	|        
-        
+| debug             | if true,logs will be enabled, by default it is false |        
       
 2. **By Patterns**        
        This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern. You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
@@ -64,6 +65,7 @@ new MergeJsonWebpackPlugin({
 ```javascript
 new MergeJsonWebpackPlugin({
     "encoding": "ascii",
+    "debug": true,
     "output": {
         "groupBy": [
             {
@@ -91,7 +93,7 @@ new MergeJsonWebpackPlugin({
 | groupBy[].fileName | output file name for the corresponding pattern.Relative path from output.path entry                                                                             |                                                                 |
 | encoding      	| Optional, encoding to be used default is utf-8	|       |
 | globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior	|       |
-
+| debug             | if true ,logs will be enabled, by default debug is false |
 ## Change Logs   
    
 | Version      	    | Changes                           |
@@ -100,6 +102,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.10           	| File watching feature added, result will be automatically refreshed if json files are modified |
 | 1.0.11           	| Publish issues with previous version |
 | 1.0.12           	| Added glob options handling |
+| 1.0.13           	| When using groupBy,fixed issue of compilation more than once, added capability to read dynamically generated files,and conditional logging |
 
 ## Sample
   Please navigate to example folder
