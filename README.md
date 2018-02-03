@@ -83,7 +83,7 @@ new MergeJsonWebpackPlugin({
     }
 });
 ```
-   
+
    
 | groupBy            | Array of patterns and corresponding fileNames.                                                                              |                                                                 |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
@@ -94,6 +94,12 @@ new MergeJsonWebpackPlugin({
 | encoding      	| Optional, encoding to be used default is utf-8	|       |
 | globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior	|       |
 | debug             | if true ,logs will be enabled, by default debug is false |
+
+3. **Run time files**
+
+   Files generated at run time can also be specified as input to the pattern.The plugin will lookup in the compilation.assets of webpack and try to load it for processing.   
+
+
 ## Change Logs   
    
 | Version      	    | Changes                           |
