@@ -16,14 +16,10 @@ module.exports = {
       filename: 'index.html',
       template: 'app/index.html'
     }),
+    
+     
     new MergeJsonWebpackPlugin({
-      "files": ['app/jsons/file1.json',
-        'app/jsons/file2.json', 'app/jsons/file3.json'],
-      "output": {
-        "fileName": "jsons/result.json"
-      }
-    }),
-    new MergeJsonWebpackPlugin({
+      "debug":true,
       "encoding": "ascii",
       "output": {
         "groupBy": [
@@ -36,8 +32,9 @@ module.exports = {
       "globOptions":{
         "nosort":true
       }
-    }),
+    }), 
     //lang views
+    
     new MergeJsonWebpackPlugin({
       "encoding": "utf8",
       "output": {
@@ -52,6 +49,15 @@ module.exports = {
           }
         ]
       }
-    })
+    }),
+    new MergeJsonWebpackPlugin({
+      "debug":true,
+      "files": ['app/jsons/file1.json',
+        'app/jsons/file2.json', 'app/jsons/file3.json',"locales/fr.json"],
+      "output": {
+        "fileName": "jsons/result.json"
+      }
+    }), 
+    
   ]
 };
