@@ -34,7 +34,7 @@ new MergeJsonWebpackPlugin({
 ## Details
   You can specify either files or  groupBy under output.
   
-1. **By files**  
+**1) By files**  
        If you want to merge group of files use like this.
 
 ```javascript
@@ -59,7 +59,7 @@ new MergeJsonWebpackPlugin({
 | encoding       	| Optional,encoding to be used default is utf-8	|        
 | debug             | if true,logs will be enabled, by default it is false |        
       
-2. **By Patterns**        
+**2) By Patterns**        
        This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern. You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
                   
 ```javascript
@@ -95,7 +95,7 @@ new MergeJsonWebpackPlugin({
 | globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior	|       |
 | debug             | if true ,logs will be enabled, by default debug is false |
 
-3. **Run time files**
+**3) Run time files**
 
    Files generated at run time can also be specified as input to the pattern.The plugin will lookup in the compilation.assets of webpack and try to load it for processing.   
 
@@ -109,6 +109,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.11           	| Publish issues with previous version |
 | 1.0.12           	| Added glob options handling |
 | 1.0.13           	| When using groupBy,fixed issue of compilation more than once, added capability to read dynamically generated files,and conditional logging |
+| 1.0.14            | Webpack 4 breaking changes fix |
 
 ## Sample
   Please navigate to example folder
