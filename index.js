@@ -62,13 +62,13 @@ class MergeJsonWebpackPlugin {
                 this.logger.debug("MergetJsonsWebpackPlugin after-emit starts...");
                 const compilationFileDependencies = new Set(compilation.fileDependencies);
                 this.fileDependencies.forEach((file) => {
-                    let absolutePath = path.join(compiler.context, file);
-                    if (!compilationFileDependencies.has(absolutePath)) {
+                    let filePath = path.join(compiler.context, file);
+                    if (!compilationFileDependencies.has(filePath)) {
                         if (compilation.fileDependencies.add) {
-                            compilation.fileDependencies.add(absolutePath);
+                            compilation.fileDependencies.add(filePath);
                         }
                         else {
-                            compilation.fileDependencies.push(absolutePath);
+                            compilation.fileDependencies.push(filePath);
                         }
                     }
                 });
