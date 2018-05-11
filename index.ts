@@ -124,48 +124,66 @@ class MergeJsonWebpackPlugin {
     }
 
     readFile = (compilation,f,resolve,reject) =>{
-         //cleanup the spaces
-         f = f.trim();
-         //check if valid json file or not ,if not reject
-         if (!f.endsWith(".json") && !f.endsWith(".JSON")) {
-             reject(`MergeJsonWebpackPlugin: Not a valid Json file ${f}`);
-             return;
-         }
-         let entryData = undefined;
-         try {
-             entryData = fs.readFileSync(f, this.options.encoding);
-         } catch (e) {
-             //check if its available in assets, it happens in case of dynamically generated files 
-             //for details check issue#25
-             this.logger.error(`${f} missing,looking for it in assets.`);
-             if(compilation.assets[f]){
-                this.logger.debug(`${f} found in the compilation assets so loading from assets.`)
-                entryData = compilation.assets[f].source();
-             }else{
-                this.logger.error(`MergeJsonWebpackPlugin: File missing [ ${f}] in path or assets `, e);
-                reject(`MergeJsonWebpackPlugin: Unable to locate file ${f}`);
-                return;
-             }             
-         }
-         if (!entryData) {
-             this.logger.error(`MergeJsonWebpackPlugin: Data appears to be empty in file [${f}]`);
-             reject(`MergeJsonWebpackPlugin: Data appears to be empty in file [ ${f} ]`);
-         }
-         // try to get a JSON object from the file data
-         let entryDataAsJSON = {};
-         try {
-             entryDataAsJSON = JSON.parse(entryData);
-         } catch (e) {
-             this.logger.error(`MergeJsonWebpackPlugin: Error parsing the json file [ ${f} ] and error is `, e);
-             reject(`MergeJsonWebpackPlugin: Error parsing the json file [${f}] `,e);
-             return;
-         }
-         if (typeof entryDataAsJSON !== 'object') {
-             this.logger.error(`MergeJsonWebpackPlugin: Not a valid object , file  [ ${f} ]`);
-             reject(`MergeJsonWebpackPlugin: Not a valid object , file  [${f} ]`);
-             return;
-         }
-         resolve(entryDataAsJSON);    
+        //cleanup the spaces
+        f = f.trim();
+        //check if valid json file or not ,if not reject
+        if (!f.endsWith(".json") && !f.endsWith(".JSON")) {
+            reject(`MergeJsonWebpackPlugin: Not a valid Json file ${f}`);
+            return;
+        }
+        let entryData = undefined;
+        try {
+            entryData = fs.readFileSync(f, this.options.encoding);
+        } catch (e) {
+            //check if its available in assets, it happens in case of dynamically generated files
+            //for details check issue#25
+            this.logger.error(`${f} missing,looking for it in assets.`);
+            if(compilation.assets[f]){
+               this.logger.debug(`${f} found in the compilation assets so loading from assets.`)
+               entryData = compilation.assets[f].source();
+            }else{
+               this.logger.error(`MergeJsonWebpackPlugin: File missing [ ${f}] in path or assets `, e);
+               reject(`MergeJsonWebpackPlugin: Unable to locate file ${f}`);
+               return;
+            }
+        }
+        if (!entryData) {
+            this.logger.error(`MergeJsonWebpackPlugin: Data appears to be empty in file [${f}]`);
+            reject(`MergeJsonWebpackPlugin: Data appears to be empty in file [ ${f} ]`);
+        }
+
+        const parsedAbsoluteFilePath = path.parse(f);
+        const extension = parsedAbsoluteFilePath.ext;
+        const end = -1 * extension.length;
+        const all_keys = f.slice(0, end).split(path.sep);
+        const base_index = all_keys.indexOf(this.options.baseDir);
+        const required_keys = all_keys.slice(base_index + 1);
+
+        // try to get a JSON object from the file data
+        let entryDataAsJSON = {};
+        try {
+            const parsed_data = JSON.parse(entryData);
+            let temp = entryDataAsJSON;
+
+            required_keys.forEach((dir, index) => {
+                if (index == required_keys.length - 1) {
+                    temp[dir] = parsed_data;
+                } else {
+                    temp[dir] = {};
+                    temp = temp[dir];
+                }
+            });
+        } catch (e) {
+            this.logger.error(`MergeJsonWebpackPlugin: Error parsing the json file [ ${f} ] and error is `, e);
+            reject(`MergeJsonWebpackPlugin: Error parsing the json file [${f}] `,e);
+            return;
+        }
+        if (typeof entryDataAsJSON !== 'object') {
+            this.logger.error(`MergeJsonWebpackPlugin: Not a valid object , file  [ ${f} ]`);
+            reject(`MergeJsonWebpackPlugin: Not a valid object , file  [${f} ]`);
+            return;
+        }
+        resolve(entryDataAsJSON);
     }
  
     /**
