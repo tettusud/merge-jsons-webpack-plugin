@@ -16,11 +16,8 @@ module.exports = {
       filename: 'index.html',
       template: 'app/index.html'
     }),
-    
-     
     new MergeJsonWebpackPlugin({
-      "debug":true,
-      "prefixFileName":true,
+      "debug":true,     
       "encoding": "ascii",
       "output": {
         "groupBy": [
@@ -59,6 +56,15 @@ module.exports = {
         "fileName": "jsons/result.json"
       }
     }), 
-    
+    //prefix file name
+    new MergeJsonWebpackPlugin({
+      "debug":true,
+      "prefixFileName":true,
+      "files": ['app/prefixFileName/sign_in.json',
+      'app/prefixFileName/sign_up.json'],
+      "output": {
+        "fileName": "jsons/prefixFileName.json"
+      }
+    })
   ]
 };
