@@ -5,11 +5,12 @@ const Glob = require("glob");
 const fs = require("fs");
 const _root = path.resolve(__dirname, "./");
 const UTF8_ENCODING = "utf8";
+const allowedExtensions = ".json";
 class MergeJsonWebpackPlugin {
     constructor(options) {
         this.apply = (compiler) => {
             compiler.plugin('emit', (compilation, done) => {
-                this.logger.debug('MergetJsonsWebpackPlugin emit started...');
+                this.logger.debug('MergeJsonsWebpackPlugin emit started...');
                 this.fileDependencies = [];
                 let files = this.options.files;
                 let output = this.options.output;
@@ -56,10 +57,10 @@ class MergeJsonWebpackPlugin {
                         this.handleErrors(compilation, err, done);
                     });
                 }
-                this.logger.debug('MergetJsonsWebpackPlugin emit completed...');
+                this.logger.debug('MergeJsonsWebpackPlugin emit completed...');
             });
             compiler.plugin("after-emit", (compilation, callback) => {
-                this.logger.debug("MergetJsonsWebpackPlugin after-emit starts...");
+                this.logger.debug("MergeJsonsWebpackPlugin after-emit starts...");
                 const compilationFileDependencies = new Set(compilation.fileDependencies);
                 this.fileDependencies.forEach((file) => {
                     let filePath = path.join(compiler.context, file);
@@ -72,7 +73,7 @@ class MergeJsonWebpackPlugin {
                         }
                     }
                 });
-                this.logger.debug("MergetJsonsWebpackPlugin after-emit completed...");
+                this.logger.debug("MergeJsonsWebpackPlugin after-emit completed...");
                 callback();
             });
         };
@@ -98,7 +99,8 @@ class MergeJsonWebpackPlugin {
         };
         this.readFile = (compilation, f, resolve, reject) => {
             f = f.trim();
-            if (!f.endsWith(".json") && !f.endsWith(".JSON")) {
+            let extn = path.extname(f).toLowerCase();
+            if (extn !== allowedExtensions) {
                 reject(`MergeJsonWebpackPlugin: Not a valid Json file ${f}`);
                 return;
             }
@@ -124,7 +126,13 @@ class MergeJsonWebpackPlugin {
             }
             let entryDataAsJSON = {};
             try {
-                entryDataAsJSON = JSON.parse(entryData);
+                let fileContent = JSON.parse(entryData);
+                if (this.options.prefixFileName) {
+                    entryDataAsJSON[path.basename(f, allowedExtensions)] = fileContent;
+                }
+                else {
+                    entryDataAsJSON = fileContent;
+                }
             }
             catch (e) {
                 this.logger.error(`MergeJsonWebpackPlugin: Error parsing the json file [ ${f} ] and error is `, e);

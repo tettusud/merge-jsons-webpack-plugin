@@ -4,6 +4,8 @@ build/
 __build__/
 .tmp/
 stats.json
+*.log
+ 
 
 .vscode/
 
