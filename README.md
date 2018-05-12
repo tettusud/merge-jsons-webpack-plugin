@@ -56,8 +56,7 @@ new MergeJsonWebpackPlugin({
 |-----------------	|----------------------------------	|
 | files           	| Array of json files to be merged 	|
 | output.fileName 	| Name of merged output file ,relative path from output.path entry      	|
-| encoding       	| Optional,encoding to be used default is utf-8	|        
-| debug             | if true,logs will be enabled, by default it is false |        
+       
       
 **2) By Patterns**        
        This plugin uses glob for searching file patterns,please refer glob for usage for sample pattern. You can specify a pattern to pull all the files that satify the particular pattern and output a single json file.
@@ -91,14 +90,20 @@ new MergeJsonWebpackPlugin({
 |                    | Do **not use** curly brackets if there is only single pattern to consider                                                   | pattern:"./node_modules/**/en.json"                             |
 |                    | **Use** curly brackets to group more than one pattern together                                                              | pattern:"{./node_modules/**/en.json,./src/assets/i18n/en.json}" |
 | groupBy[].fileName | output file name for the corresponding pattern.Relative path from output.path entry                                                                             |                                                                 |
-| encoding      	| Optional, encoding to be used default is utf-8	|       |
-| globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior	|       |
-| debug             | if true ,logs will be enabled, by default debug is false |
+
+
 
 **3) Run time files**
 
    Files generated at run time can also be specified as input to the pattern.The plugin will lookup in the compilation.assets of webpack and try to load it for processing.   
 
+## Options
+| key            | Description.                                                                              |                                                                 |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| debug             | if true ,logs will be enabled, by default debug is false. |
+| encoding      	| Optional, encoding to be used default is utf-8.	|       |
+| globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior.	|       |
+| prefixFileName            | if true ,file names will be prefixed to each file content and merged with outfile. |
 
 ## Change Logs   
    
@@ -110,6 +115,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.12           	| Added glob options handling |
 | 1.0.13           	| When using groupBy,fixed issue of compilation more than once, added capability to read dynamically generated files,and conditional logging |
 | 1.0.14            | Webpack 4 breaking changes fix |
+| 1.0.15            | prefixFileName option added, for feature request #31 |
 
 ## Sample
   Please navigate to example folder

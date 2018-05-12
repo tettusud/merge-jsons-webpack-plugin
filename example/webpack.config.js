@@ -20,6 +20,7 @@ module.exports = {
      
     new MergeJsonWebpackPlugin({
       "debug":true,
+      "prefixFileName":true,
       "encoding": "ascii",
       "output": {
         "groupBy": [
