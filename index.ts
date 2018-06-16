@@ -23,7 +23,8 @@ class MergeJsonWebpackPlugin {
 
 
     apply = (compiler: any) => {
-        compiler.plugin('emit', (compilation, done) => {
+        
+        const emit = (compilation, done) => {
             this.logger.debug('MergeJsonsWebpackPlugin emit started...');
             //initialize fileDependency array
             this.fileDependencies = [];
@@ -76,13 +77,13 @@ class MergeJsonWebpackPlugin {
                     });
             }
             this.logger.debug('MergeJsonsWebpackPlugin emit completed...');
-        });
+        }
 
-        compiler.plugin("after-emit", (compilation, callback) => {
+        const afterEmit = (compilation, done) => {
             this.logger.debug("MergeJsonsWebpackPlugin after-emit starts...");
             const compilationFileDependencies = new Set(compilation.fileDependencies);
             this.fileDependencies.forEach((file) => {
-                let filePath = path.join(compiler.context, file)                
+                let filePath = path.join(compiler.context, file)
                 if (!compilationFileDependencies.has(filePath)) {
                     if (compilation.fileDependencies.add) {
                         //for webpack4                        
@@ -94,8 +95,18 @@ class MergeJsonWebpackPlugin {
                 }
             });
             this.logger.debug("MergeJsonsWebpackPlugin after-emit completed...")
-            callback();
-        });
+            done();
+        }
+
+        // code handling for webpack 4
+        if(compiler.hooks){           
+            const plugin="MergeJsonWebpackPlugin";
+            compiler.hooks.emit.tapAsync(plugin, emit);
+            compiler.hooks.afterEmit.tapAsync(plugin, afterEmit);
+        }else {  //for webpack 3            
+            compiler.plugin('emit', emit);    
+            compiler.plugin("after-emit", afterEmit);
+        }       
     };
 
     /**

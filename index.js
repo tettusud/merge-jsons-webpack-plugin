@@ -9,7 +9,7 @@ const allowedExtensions = ".json";
 class MergeJsonWebpackPlugin {
     constructor(options) {
         this.apply = (compiler) => {
-            compiler.plugin('emit', (compilation, done) => {
+            const emit = (compilation, done) => {
                 this.logger.debug('MergeJsonsWebpackPlugin emit started...');
                 this.fileDependencies = [];
                 let files = this.options.files;
@@ -58,8 +58,8 @@ class MergeJsonWebpackPlugin {
                     });
                 }
                 this.logger.debug('MergeJsonsWebpackPlugin emit completed...');
-            });
-            compiler.plugin("after-emit", (compilation, callback) => {
+            };
+            const afterEmit = (compilation, done) => {
                 this.logger.debug("MergeJsonsWebpackPlugin after-emit starts...");
                 const compilationFileDependencies = new Set(compilation.fileDependencies);
                 this.fileDependencies.forEach((file) => {
@@ -74,8 +74,17 @@ class MergeJsonWebpackPlugin {
                     }
                 });
                 this.logger.debug("MergeJsonsWebpackPlugin after-emit completed...");
-                callback();
-            });
+                done();
+            };
+            if (compiler.hooks) {
+                const plugin = "MergeJsonWebpackPlugin";
+                compiler.hooks.emit.tapAsync(plugin, emit);
+                compiler.hooks.afterEmit.tapAsync(plugin, afterEmit);
+            }
+            else {
+                compiler.plugin('emit', emit);
+                compiler.plugin("after-emit", afterEmit);
+            }
         };
         this.processFiles = (compilation, files, outputPath, resolve, reject) => {
             this.fileDependencies = this.fileDependencies.concat(files);
