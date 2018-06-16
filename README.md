@@ -116,6 +116,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.13           	| When using groupBy,fixed issue of compilation more than once, added capability to read dynamically generated files,and conditional logging |
 | 1.0.14            | Webpack 4 breaking changes fix |
 | 1.0.15            | prefixFileName option added, for feature request #31 |
+| 1.0.16            | Webpack 4 compatibile api changes  |
 
 ## Sample
   Please navigate to example folder

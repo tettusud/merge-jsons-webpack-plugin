@@ -1,7 +1,7 @@
 {
     "name": "merge-jsons-webpack-plugin",
     "description": "This plugin is used to merge json files into single json file,using glob or file names",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "author": {
         "email": "sudharsan_tk@yahoo.co.in",
         "name": "Sudharsan Tettu"
@@ -28,8 +28,7 @@
         "plugin",
         "configuration"
     ],
-    "dependencies": {
-        "json-loader": "0.5.4",
+    "dependencies": {       
         "glob": "7.1.1",
         "es6-promise": "4.0.5"
     },
