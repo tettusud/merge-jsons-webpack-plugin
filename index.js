@@ -61,18 +61,22 @@ class MergeJsonWebpackPlugin {
             };
             const afterEmit = (compilation, done) => {
                 this.logger.debug("MergeJsonsWebpackPlugin after-emit starts...");
-                const compilationFileDependencies = new Set(compilation.fileDependencies);
-                this.fileDependencies.forEach((file) => {
+                let compilationFileDependencies;
+                let addFileDependency;
+                if (Array.isArray(compilation.fileDependencies)) {
+                    compilationFileDependencies = new Set(compilation.fileDependencies);
+                    addFileDependency = (file) => compilation.fileDependencies.push(file);
+                }
+                else {
+                    compilationFileDependencies = compilation.fileDependencies;
+                    addFileDependency = (file) => compilation.fileDependencies.add(file);
+                }
+                for (const file of this.fileDependencies) {
                     let filePath = path.join(compiler.context, file);
                     if (!compilationFileDependencies.has(filePath)) {
-                        if (compilation.fileDependencies.add) {
-                            compilation.fileDependencies.add(filePath);
-                        }
-                        else {
-                            compilation.fileDependencies.push(filePath);
-                        }
+                        addFileDependency(filePath);
                     }
-                });
+                }
                 this.logger.debug("MergeJsonsWebpackPlugin after-emit completed...");
                 done();
             };

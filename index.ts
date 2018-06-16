@@ -23,7 +23,7 @@ class MergeJsonWebpackPlugin {
 
 
     apply = (compiler: any) => {
-        
+
         const emit = (compilation, done) => {
             this.logger.debug('MergeJsonsWebpackPlugin emit started...');
             //initialize fileDependency array
@@ -81,32 +81,36 @@ class MergeJsonWebpackPlugin {
 
         const afterEmit = (compilation, done) => {
             this.logger.debug("MergeJsonsWebpackPlugin after-emit starts...");
-            const compilationFileDependencies = new Set(compilation.fileDependencies);
-            this.fileDependencies.forEach((file) => {
+            // source code taken from copy-webpack-plugin
+            let compilationFileDependencies;
+            let addFileDependency;
+            if (Array.isArray(compilation.fileDependencies)) {
+                compilationFileDependencies = new Set(compilation.fileDependencies);
+                addFileDependency = (file) => compilation.fileDependencies.push(file);
+            } else {
+                compilationFileDependencies = compilation.fileDependencies;
+                addFileDependency = (file) => compilation.fileDependencies.add(file);
+            }
+                       
+            for (const file of this.fileDependencies) {
                 let filePath = path.join(compiler.context, file)
                 if (!compilationFileDependencies.has(filePath)) {
-                    if (compilation.fileDependencies.add) {
-                        //for webpack4                        
-                        compilation.fileDependencies.add(filePath);
-                    } else {
-                        //webpack 3                       
-                        compilation.fileDependencies.push(filePath);
-                    }
+                    addFileDependency(filePath);
                 }
-            });
+            }
             this.logger.debug("MergeJsonsWebpackPlugin after-emit completed...")
             done();
         }
 
         // code handling for webpack 4
-        if(compiler.hooks){           
-            const plugin="MergeJsonWebpackPlugin";
+        if (compiler.hooks) {
+            const plugin = "MergeJsonWebpackPlugin";
             compiler.hooks.emit.tapAsync(plugin, emit);
             compiler.hooks.afterEmit.tapAsync(plugin, afterEmit);
-        }else {  //for webpack 3            
-            compiler.plugin('emit', emit);    
+        } else {  //for webpack 3            
+            compiler.plugin('emit', emit);
             compiler.plugin("after-emit", afterEmit);
-        }       
+        }
     };
 
     /**
