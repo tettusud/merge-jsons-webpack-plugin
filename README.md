@@ -117,7 +117,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.14            | Webpack 4 breaking changes fix |
 | 1.0.15            | prefixFileName option added, for feature request #31 |
 | 1.0.16            | Webpack 4 compatibile api changes  |
-| 1.0.17            | Mandatory Json check removed,file can be of any extenion and also testcases added  |
+| 1.0.17            | Filex extension check removed,file can be of any extention as long as content is json.Testcases also added  |
 
 ## Sample
    To see sample you can navigate to example folder.
