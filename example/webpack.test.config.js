@@ -3,12 +3,12 @@ var MergeJsonWebpackPlugin = require('../index.js');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  context: path.resolve(__dirname),
   entry: {
     app: ["./app/main.js"]
   },
   output: {
-    path: path.resolve(__dirname, "build"),    
+    path: path.resolve(__dirname, "build"),
+    publicPath: "/assets/",
     filename: "bundle.js"
   },
   plugins: [
@@ -52,6 +52,9 @@ module.exports = {
             "fileName": "groupBy/locales/fr.json"
           }
         ]
+      },
+      "globOptions":{
+        "nosort":true
       }
     }),
     /**

@@ -9,9 +9,11 @@ const allowedExtensions = ".json";
 class MergeJsonWebpackPlugin {
     constructor(options) {
         this.apply = (compiler) => {
+            this.options.compiler = compiler;
             const emit = (compilation, done) => {
                 this.logger.debug('MergeJsonsWebpackPlugin emit started...');
                 this.fileDependencies = [];
+                this.options.compilation = compilation;
                 let files = this.options.files;
                 let output = this.options.output;
                 let groupBy = output.groupBy;
@@ -22,7 +24,7 @@ class MergeJsonWebpackPlugin {
                 if (files) {
                     let outputPath = output.fileName;
                     new es6_promise_1.Promise((resolve, reject) => {
-                        this.processFiles(compilation, files, outputPath, resolve, reject);
+                        this.processFiles(files, outputPath, resolve, reject);
                     })
                         .then((res) => {
                         this.addAssets(compilation, res);
@@ -42,7 +44,7 @@ class MergeJsonWebpackPlugin {
                             let pattern = globs.pattern;
                             let outputPath = globs.fileName;
                             this._glob(pattern, globOptions).then((files) => {
-                                this.processFiles(compilation, files, outputPath, resolve, reject);
+                                this.processFiles(files, outputPath, resolve, reject);
                             });
                         });
                     });
@@ -90,11 +92,11 @@ class MergeJsonWebpackPlugin {
                 compiler.plugin("after-emit", afterEmit);
             }
         };
-        this.processFiles = (compilation, files, outputPath, resolve, reject) => {
+        this.processFiles = (files, outputPath, resolve, reject) => {
             this.fileDependencies = this.fileDependencies.concat(files);
             let readFiles = files.map((f) => {
                 return new es6_promise_1.Promise((res, rej) => {
-                    this.readFile(compilation, f, res, rej);
+                    this.readFile(f, res, rej);
                 });
             });
             let mergedContents = {};
@@ -110,16 +112,18 @@ class MergeJsonWebpackPlugin {
                 reject(error);
             });
         };
-        this.readFile = (compilation, f, resolve, reject) => {
+        this.readFile = (f, resolve, reject) => {
+            let compilation = this.options.compilation;
+            let contextPath = this.options.compiler.context;
             f = f.trim();
             let extn = path.extname(f).toLowerCase();
             if (extn !== allowedExtensions) {
-                reject(`MergeJsonWebpackPlugin: Not a valid Json file ${f}`);
-                return;
+                this.logger.error(`${f} doesn't contain a valid file extention,trying to load it contents.`);
             }
             let entryData = undefined;
             try {
-                entryData = fs.readFileSync(f, this.options.encoding);
+                let filePath = path.join(contextPath, f);
+                entryData = fs.readFileSync(filePath, this.options.encoding);
             }
             catch (e) {
                 this.logger.error(`${f} missing,looking for it in assets.`);
@@ -184,7 +188,7 @@ class MergeJsonWebpackPlugin {
         };
         this._glob = (pattern, options) => {
             return new es6_promise_1.Promise((resolve, reject) => {
-                const defaultOptions = { mark: true };
+                const defaultOptions = { mark: true, cwd: this.options.compiler.context };
                 new Glob(pattern, Object.assign({}, options, defaultOptions), function (err, matches) {
                     if (err) {
                         reject(err);
