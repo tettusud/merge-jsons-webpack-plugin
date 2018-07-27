@@ -117,12 +117,15 @@ new MergeJsonWebpackPlugin({
 | 1.0.14            | Webpack 4 breaking changes fix |
 | 1.0.15            | prefixFileName option added, for feature request #31 |
 | 1.0.16            | Webpack 4 compatibile api changes  |
+| 1.0.17            | Mandatory Json check removed,file can be of any extenion and also testcases added  |
 
 ## Sample
-  Please navigate to example folder
+   To see sample you can navigate to example folder.
+   From the root folder merge-jsons-webpack-plugin, you can start the sample application
+   as mentioned below
  
 ```
-   cd example
+    
    > npm install
    > npm start
 

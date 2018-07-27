@@ -1,47 +1,58 @@
 {
-    "name": "merge-jsons-webpack-plugin",
-    "description": "This plugin is used to merge json files into single json file,using glob or file names",
-    "version": "1.0.16",
-    "author": {
-        "email": "sudharsan_tk@yahoo.co.in",
-        "name": "Sudharsan Tettu"
-    },
-    "contributors": [],
-    "homepage": "https://github.com/tettusud/merge-jsons-webpack-plugin.git",
-    "bugs": "https://github.com/tettusud/merge-jsons-webpack-plugin/issues",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/tettusud/merge-jsons-webpack-plugin.git"
-    },
-    "private": false,
-    "license": "MIT",
-    "keywords": [
-        "json files merge",
-        "json files merge plugin",
-        "json files merge loader",
-        "json merge",
-        "i18n",
-        "webpack",
-        "json",
-        "files",
-        "merge",
-        "plugin",
-        "configuration"
-    ],
-    "dependencies": {       
-        "glob": "7.1.1",
-        "es6-promise": "4.0.5"
-    },
-    "devDependencies": {
-        "@types/node": "^6.0.55",
-        "typescript": "^2.1.4",
-        "typings": "^2.1.0"
-    },
-    "main": "index.js",
-    "scripts": {
-        "build": "tsc",
-        "watch" :" tsc -w",
-        "post-install": "typings install",
-        "deploy": "npm publish"
-    }
+  "name": "merge-jsons-webpack-plugin",
+  "description": "This plugin is used to merge json files into single json file,using glob or file names",
+  "version": "1.0.17",
+  "author": {
+    "email": "sudharsan_tk@yahoo.co.in",
+    "name": "Sudharsan Tettu"
+  },
+  "contributors": [],
+  "homepage": "https://github.com/tettusud/merge-jsons-webpack-plugin.git",
+  "bugs": "https://github.com/tettusud/merge-jsons-webpack-plugin/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tettusud/merge-jsons-webpack-plugin.git"
+  },
+  "private": false,
+  "license": "MIT",
+  "keywords": [
+    "json files merge",
+    "json files merge plugin",
+    "json files merge loader",
+    "json merge",
+    "i18n",
+    "webpack",
+    "json",
+    "files",
+    "merge",
+    "plugin",
+    "configuration"
+  ],
+  "dependencies": {
+    "es6-promise": "4.0.5",
+    "glob": "7.1.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^6.0.55",
+    "chai": "^4.1.2",
+    "dir-compare": "^1.4.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.1.4",
+    "typings": "^2.1.0",
+    "webpack": "4.16.2",
+    "webpack-dev-server": "^3.1.5"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": " tsc -w",
+    "post-install": "typings install",
+    "deploy": "npm publish",
+    "test": "mocha -r ts-node/register spec/*.spec.ts",
+    "start": "webpack-dev-server --content-base example/build/ --config example/webpack.config.js --inline"
+  }
 }

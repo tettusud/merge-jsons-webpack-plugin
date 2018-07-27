@@ -23,11 +23,13 @@ class MergeJsonWebpackPlugin {
 
 
     apply = (compiler: any) => {
+        this.options.compiler=compiler;
 
         const emit = (compilation, done) => {
             this.logger.debug('MergeJsonsWebpackPlugin emit started...');
             //initialize fileDependency array
             this.fileDependencies = [];
+            this.options.compilation=compilation;
             let files = this.options.files;
             let output = this.options.output;
             let groupBy = output.groupBy;
@@ -38,28 +40,27 @@ class MergeJsonWebpackPlugin {
             if (files) {
                 let outputPath = output.fileName;
                 new Promise((resolve, reject) => {
-                    this.processFiles(compilation, files, outputPath, resolve, reject);
+                    this.processFiles(files, outputPath, resolve, reject);
                 })
-                    .then((res: Response) => {
-                        this.addAssets(compilation, res);
-                        done();
-                    })
-                    .catch((err) => {
-                        this.handleErrors(compilation, err, done);
-                    });
+                .then((res: Response) => {
+                    this.addAssets(compilation, res);
+                    done();
+                })
+                .catch((err) => {
+                    this.handleErrors(compilation, err, done);
+                });
 
             } else if (groupBy) {
                 if (groupBy.length == 0) {
                     compilation.errors.push('MergeJsonWebpackPlugin: \"groupBy\" must be non empty object');
                 }
                 let globOptions = this.options.globOptions || {};
-
                 let groupByPromises = groupBy.map((globs: any) => {
                     return new Promise((resolve, reject) => {
                         let pattern = globs.pattern;
                         let outputPath = globs.fileName;
                         this._glob(pattern, globOptions).then((files) => {
-                            this.processFiles(compilation, files, outputPath, resolve, reject);
+                            this.processFiles(files, outputPath, resolve, reject);
                         });
                     });
                 });
@@ -91,7 +92,7 @@ class MergeJsonWebpackPlugin {
                 compilationFileDependencies = compilation.fileDependencies;
                 addFileDependency = (file) => compilation.fileDependencies.add(file);
             }
-                       
+
             for (const file of this.fileDependencies) {
                 let filePath = path.join(compiler.context, file)
                 if (!compilationFileDependencies.has(filePath)) {
@@ -116,11 +117,11 @@ class MergeJsonWebpackPlugin {
     /**
      * 
      */
-    processFiles = (compilation, files, outputPath, resolve, reject) => {
+    processFiles = (files, outputPath, resolve, reject) => {
         this.fileDependencies = this.fileDependencies.concat(files);
         let readFiles = files.map((f) => {
             return new Promise((res, rej) => {
-                this.readFile(compilation, f, res, rej)
+                this.readFile(f, res, rej)
             })
         });
         let mergedContents: any = {};
@@ -135,21 +136,23 @@ class MergeJsonWebpackPlugin {
             .catch((error) => {
                 reject(error);
             });
-
     }
 
-    readFile = (compilation, f, resolve, reject) => {
+    readFile = (f, resolve, reject) => {
+        let compilation=this.options.compilation;
+        let contextPath= this.options.compiler.context;
+         
         //cleanup the spaces
         f = f.trim();
         //check if valid json file or not ,if not reject
         let extn = path.extname(f).toLowerCase();
         if (extn !== allowedExtensions) {
-            reject(`MergeJsonWebpackPlugin: Not a valid Json file ${f}`);
-            return;
+            this.logger.error(`${f} doesn't contain a valid file extention,trying to load it contents.`);
         }
         let entryData = undefined;
         try {
-            entryData = fs.readFileSync(f, this.options.encoding);
+            let filePath=path.join(contextPath,f);
+            entryData = fs.readFileSync(filePath, this.options.encoding);           
         } catch (e) {
             //check if its available in assets, it happens in case of dynamically generated files 
             //for details check issue#25
@@ -163,6 +166,8 @@ class MergeJsonWebpackPlugin {
                 return;
             }
         }
+               
+
         if (!entryData) {
             this.logger.error(`MergeJsonWebpackPlugin: Data appears to be empty in file [${f}]`);
             reject(`MergeJsonWebpackPlugin: Data appears to be empty in file [ ${f} ]`);
@@ -221,13 +226,13 @@ class MergeJsonWebpackPlugin {
      * @returns {Promise}
      * @private
      */
-    private _glob = (pattern: string, options?: any): Promise<Array<string>> => {
+    private _glob = (pattern: string, options?: any): Promise<Array<string>> => {        
         return new Promise((resolve, reject) => {
-            const defaultOptions = { mark: true };
+            const defaultOptions = { mark: true ,cwd:this.options.compiler.context};
             new Glob(pattern, { ...options, ...defaultOptions }, function (err: any, matches: any) {
                 if (err) {
                     reject(err);
-                }
+                }  
                 resolve(matches);
             })
         });

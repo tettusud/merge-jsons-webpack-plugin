@@ -1,22 +1,22 @@
 
 
 $(document).ready(function () {    
-    $.getJSON("assets/jsons/result.json", function (result) {
+    $.getJSON("files/file.json", function (result) {
         $.each(result, function (i, field) {
             $("#byFiles").append("<strong>"+i+"</strong>:"+field + " <p>");
         });
     });
-    $.getJSON("assets/locales/en.json", function (result) {
+    $.getJSON("groupBy/locales/en.json", function (result) {
         $.each(result, function (i, field) {
             $("#en").append("<strong>"+i+"</strong>:"+field + " <p>");
         });
     });
-     $.getJSON("assets/locales/fr.json", function (result) {
+     $.getJSON("groupBy/locales/fr.json", function (result) {
         $.each(result, function (i, field) {
             $("#fr").append("<strong>"+i+"</strong>:"+field + " <p>");
         });
     });
-      $.getJSON("assets/jsons/countries.json", function (result) {   
+      $.getJSON("groupBy/countries/countries.json", function (result) {   
         
        document.getElementById("country").innerHTML=JSON.stringify(result,undefined,10)
     });
