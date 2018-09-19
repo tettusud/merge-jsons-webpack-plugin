@@ -110,7 +110,21 @@ module.exports = {
       "output": {
         "fileName": "prefixfilename/prefixFileName.json"
       }
-    })
+    }),
+
+    /**
+     * This file contains the 3 BOM bytes EF BB BF
+     * The library should be able to look pass them and
+     * still parse the JSON file.
+     * Fourth byte should be a `{` character, hex: 7B
+     */
+    new MergeJsonWebpackPlugin({
+      "debug":false,
+      "files": ['app/bom-bytes/bom-bytes.json'], // Check this file with a HEX viewer.
+      "output": {
+        "fileName": "bom-bytes/bom-bytes.json"
+      }
+    }), 
      
   ]
 };

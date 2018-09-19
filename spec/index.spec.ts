@@ -16,14 +16,18 @@ const expected = [
   'app/expected/en.json',
   'app/expected/fr.json',
   'app/expected/file.json',
-  'app/expected/prefixFileName.json'];
+  'app/expected/prefixFileName.json',
+  'app/expected/bom-bytes.json',
+];
 
 const actual = [
   'build/groupBy/countries/countries.json',
   'build/groupBy/locales/en.json',
   'build/groupBy/locales/fr.json',
   'build/files/file.json',
-  'build/prefixFileName/prefixFileName.json'];
+  'build/prefixFileName/prefixFileName.json',
+  'build/bom-bytes/bom-bytes.json',
+];
 
 describe('should merge json files', () => {
 
@@ -79,6 +83,15 @@ describe('MergeWebpackPlugin', () => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[4])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[4])).toString();
     expect(file2Contents).to.equal(file1Contents);     
+    done();
+  })
+
+  it('should process jsons with BOM bytes', (done) => {
+    // These 2 files don't have BOM bytes on them.
+    // The file bundled via wepack.test.config.js does
+    var file1Contents = fs.readFileSync(path.join(examplePath, expected[5])).toString();
+    var file2Contents = fs.readFileSync(path.join(examplePath, actual[5])).toString();
+    expect(file2Contents).to.equal(file1Contents);
     done();
   })
 
