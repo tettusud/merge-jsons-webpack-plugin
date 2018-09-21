@@ -23,13 +23,13 @@ class MergeJsonWebpackPlugin {
 
 
     apply = (compiler: any) => {
-        this.options.compiler=compiler;
+        this.options.compiler = compiler;
 
         const emit = (compilation, done) => {
             this.logger.debug('MergeJsonsWebpackPlugin emit started...');
             //initialize fileDependency array
             this.fileDependencies = [];
-            this.options.compilation=compilation;
+            this.options.compilation = compilation;
             let files = this.options.files;
             let output = this.options.output;
             let groupBy = output.groupBy;
@@ -42,13 +42,13 @@ class MergeJsonWebpackPlugin {
                 new Promise((resolve, reject) => {
                     this.processFiles(files, outputPath, resolve, reject);
                 })
-                .then((res: Response) => {
-                    this.addAssets(compilation, res);
-                    done();
-                })
-                .catch((err) => {
-                    this.handleErrors(compilation, err, done);
-                });
+                    .then((res: Response) => {
+                        this.addAssets(compilation, res);
+                        done();
+                    })
+                    .catch((err) => {
+                        this.handleErrors(compilation, err, done);
+                    });
 
             } else if (groupBy) {
                 if (groupBy.length == 0) {
@@ -139,9 +139,9 @@ class MergeJsonWebpackPlugin {
     }
 
     readFile = (f, resolve, reject) => {
-        let compilation=this.options.compilation;
-        let contextPath= this.options.compiler.context;
-         
+        let compilation = this.options.compilation;
+        let contextPath = this.options.compiler.context;
+
         //cleanup the spaces
         f = f.trim();
         //check if valid json file or not ,if not reject
@@ -151,8 +151,8 @@ class MergeJsonWebpackPlugin {
         }
         let entryData = undefined;
         try {
-            let filePath=path.join(contextPath,f);
-            entryData = fs.readFileSync(filePath, this.options.encoding);           
+            let filePath = path.join(contextPath, f);
+            entryData = fs.readFileSync(filePath, this.options.encoding);
         } catch (e) {
             //check if its available in assets, it happens in case of dynamically generated files 
             //for details check issue#25
@@ -166,12 +166,20 @@ class MergeJsonWebpackPlugin {
                 return;
             }
         }
-               
+
 
         if (!entryData) {
             this.logger.error(`MergeJsonWebpackPlugin: Data appears to be empty in file [${f}]`);
             reject(`MergeJsonWebpackPlugin: Data appears to be empty in file [ ${f} ]`);
         }
+
+        // Source: https://github.com/sindresorhus/strip-bom/blob/master/index.js
+        // Catches EFBBBF (UTF-8 BOM) because the buffer-to-string
+        // conversion translates it to FEFF (UTF-16 BOM)
+        if (entryData.charCodeAt(0) === 0xFEFF) {
+            entryData = entryData.slice(1);
+        }
+
         // try to get a JSON object from the file data
         let entryDataAsJSON = {};
         try {
@@ -226,13 +234,13 @@ class MergeJsonWebpackPlugin {
      * @returns {Promise}
      * @private
      */
-    private _glob = (pattern: string, options?: any): Promise<Array<string>> => {        
+    private _glob = (pattern: string, options?: any): Promise<Array<string>> => {
         return new Promise((resolve, reject) => {
-            const defaultOptions = { mark: true ,cwd:this.options.compiler.context};
+            const defaultOptions = { mark: true, cwd: this.options.compiler.context };
             new Glob(pattern, { ...options, ...defaultOptions }, function (err: any, matches: any) {
                 if (err) {
                     reject(err);
-                }  
+                }
                 resolve(matches);
             })
         });

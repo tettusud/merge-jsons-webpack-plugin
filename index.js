@@ -124,13 +124,6 @@ class MergeJsonWebpackPlugin {
             try {
                 let filePath = path.join(contextPath, f);
                 entryData = fs.readFileSync(filePath, this.options.encoding);
-
-                // Source: https://github.com/sindresorhus/strip-bom/blob/master/index.js
-                // Catches EFBBBF (UTF-8 BOM) because the buffer-to-string
-                // conversion translates it to FEFF (UTF-16 BOM)
-                if (entryData.charCodeAt(0) === 0xFEFF) {
-                    entryData = entryData.slice(1);
-                }
             }
             catch (e) {
                 this.logger.error(`${f} missing,looking for it in assets.`);
@@ -147,6 +140,9 @@ class MergeJsonWebpackPlugin {
             if (!entryData) {
                 this.logger.error(`MergeJsonWebpackPlugin: Data appears to be empty in file [${f}]`);
                 reject(`MergeJsonWebpackPlugin: Data appears to be empty in file [ ${f} ]`);
+            }
+            if (entryData.charCodeAt(0) === 0xFEFF) {
+                entryData = entryData.slice(1);
             }
             let entryDataAsJSON = {};
             try {
