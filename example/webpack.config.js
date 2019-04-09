@@ -105,7 +105,7 @@ module.exports = {
              'app/prefixFileName/sign_up.json'
           ],
       "output": {
-        "fileName": "prefixfilename/prefixFileName.json"
+        "fileName": "prefixFileName/prefixFileName.json"
       }
     })
      

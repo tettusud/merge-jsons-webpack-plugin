@@ -186,7 +186,11 @@ class MergeJsonWebpackPlugin {
             let fileContent = JSON.parse(entryData);
             //to prefix object with filename ,requirement as request in issue#31            
             if (this.options.prefixFileName) {
-                entryDataAsJSON[path.basename(f, allowedExtensions)] = fileContent;
+                if (typeof this.options.prefixFileName === 'function') {
+                    entryDataAsJSON[this.options.prefixFileName(f)] = fileContent;
+                } else {
+                    entryDataAsJSON[path.basename(f, allowedExtensions)] = fileContent;
+                }
             } else {
                 entryDataAsJSON = fileContent
             }
