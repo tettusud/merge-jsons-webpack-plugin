@@ -103,7 +103,7 @@ new MergeJsonWebpackPlugin({
 | debug             | if true ,logs will be enabled, by default debug is false. |
 | encoding      	| Optional, encoding to be used default is utf-8.	|       |
 | globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior.	|       |
-| prefixFileName            | if true ,file names will be prefixed to each file content and merged with outfile. |
+| prefixFileName    | Optional. If true, file names will be prefixed to each file content and merged with outfile<br><br>By default, the generated prefix is ​​simply the filename without the .json extension. If you want to customize the process of generating prefixes, you can pass a function as this option. The function should take exactly one argument (the file path) and returns the prefix.|
 
 ## Change Logs   
    
@@ -119,6 +119,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.16            | Webpack 4 compatibile api changes  |
 | 1.0.17            | Filex extension check removed,file can be of any extention as long as content is json.Testcases also added  |
 | 1.0.18            | Bom issue fix #22 |
+| 1.0.19            | Support for custom "prefixFileName" function  |
 
 ## Sample
    To see sample you can navigate to example folder.

@@ -108,7 +108,48 @@ module.exports = {
              'app/prefixFileName/sign_up.json'
           ],
       "output": {
-        "fileName": "prefixfilename/prefixFileName.json"
+        "fileName": "prefixFileName/prefixFileName.json"
+      }
+    }),
+
+   /**
+    *  Merge files and prefix them using the provided function
+    *  
+    *  for eg:
+    *   sign_in.en.json
+    *       {
+    *          "submit": "Sign in"
+    *       }
+    *   sign_up.en.json
+    *       {
+    *          "submit": "Sign up"
+    *       }
+    *       
+    *  The "prefixFileName" function: filePath => path.basename(filePath)
+    *                                                 .split('.')[0]
+    *                                                 .replace(/_+([a-z0-9])/ig, (_, char) => char.toUpperCase())
+    *   
+    *  --------OUTPUT----------
+    *  prefixFileNameFn.json
+    *       {
+    *          "signIn": {
+    *             "submit": "Sign in"
+    *          },
+    *          "signUp": {
+    *             "submit": "Sign up"
+    *          }
+    *       }
+    */
+    new MergeJsonWebpackPlugin({
+      "debug":false,
+      "prefixFileName": filePath => path.basename(filePath).split('.')[0]
+        .replace(/_+([a-z0-9])/ig, (_, char) => char.toUpperCase()),
+      "files": [
+             'app/prefixFileNameFn/sign_in.en.json',
+             'app/prefixFileNameFn/sign_up.en.json'
+          ],
+      "output": {
+        "fileName": "prefixFileNameFn/prefixFileNameFn.json"
       }
     }),
 
