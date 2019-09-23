@@ -105,7 +105,7 @@ class MergeJsonWebpackPlugin {
                 contents.forEach((content) => {
                     mergedContents = this.mergeDeep(mergedContents, content);
                 });
-                mergedContents = JSON.stringify(mergedContents);
+                mergedContents = JSON.stringify(mergedContents, null, this.options.space);
                 resolve(new Response(outputPath, mergedContents));
             })
                 .catch((error) => {

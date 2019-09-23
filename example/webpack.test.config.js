@@ -166,6 +166,22 @@ module.exports = {
         "fileName": "bom-bytes/bom-bytes.json"
       }
     }), 
+
+    /**
+     * Merge files and produce formatted output
+     */
+    new MergeJsonWebpackPlugin({
+      "debug":false,     
+      "files": ['app/files/file1.json',
+                'app/files/file2.json',
+                'app/files/file3.json',
+                'app/files/file4.txt',
+                'groupBy/locales/fr.json'],
+      "output": {
+        "fileName": "space/space.json"
+      },
+      "space": 4
+    }), 
      
   ]
 };
