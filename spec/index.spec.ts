@@ -18,8 +18,7 @@ const expected = [
   'app/expected/file.json',
   'app/expected/prefixFileName.json',
   'app/expected/bom-bytes.json',
-  'app/expected/prefixFileNameFn.json',
-  'app/expected/space.json'
+  'app/expected/prefixFileNameFn.json'
 ];
 
 const actual = [
@@ -29,8 +28,7 @@ const actual = [
   'build/files/file.json',
   'build/prefixFileName/prefixFileName.json',
   'build/bom-bytes/bom-bytes.json',
-  'build/prefixFileNameFn/prefixFileNameFn.json',
-  'build/space/space.json'
+  'build/prefixFileNameFn/prefixFileNameFn.json'
 ];
 
 describe('should merge json files', () => {
@@ -103,13 +101,6 @@ describe('MergeWebpackPlugin', () => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[6])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[6])).toString();
     expect(file2Contents).to.equal(file1Contents);     
-    done();
-  })
-
-  it('should format output if space parameter is provided', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[7])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[7])).toString();
-    expect(file2Contents).to.equal(file1Contents);
     done();
   })
 
