@@ -5,11 +5,8 @@ const webpack = require('webpack');
 const rimraf = require('rimraf');
 const fs = require('fs');
 
-
-const webpackMajorVersion = require('webpack/package.json').version.split('.')[0];
 const examplePath = path.resolve(__dirname, '..', 'example');
 var outputPath = path.resolve(examplePath, 'build');
-var expectedPath = path.resolve(__dirname, '..', 'app', 'expected');
 
 const expected = [
   'app/expected/countries.json',
@@ -19,7 +16,8 @@ const expected = [
   'app/expected/prefixFileName.json',
   'app/expected/bom-bytes.json',
   'app/expected/prefixFileNameFn.json',
-  'app/expected/space.json'
+  'app/expected/space.json',
+  'app/expected/duplicate.json'
 ];
 
 const actual = [
@@ -30,7 +28,8 @@ const actual = [
   'build/prefixFileName/prefixFileName.json',
   'build/bom-bytes/bom-bytes.json',
   'build/prefixFileNameFn/prefixFileNameFn.json',
-  'build/space/space.json'
+  'build/space/space.json',
+  'build/duplicates/duplicate.json'
 ];
 
 describe('should merge json files', () => {
@@ -39,7 +38,7 @@ describe('should merge json files', () => {
 });
 
 before(function (done) {
-  this.timeout(5000);  
+  this.timeout(5000);
   var options = require(path.join(examplePath, 'webpack.test.config.js'));
   options.mode = 'production';
   options.context = examplePath;
@@ -58,7 +57,7 @@ before(function (done) {
  * Test all the scenerios
  */
 describe('MergeWebpackPlugin', () => {
-  
+
   it('should merge files by glob', (done) => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[0])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[0])).toString();
@@ -79,14 +78,14 @@ describe('MergeWebpackPlugin', () => {
   it('should merge files by filename', (done) => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[3])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[3])).toString();
-    expect(file2Contents).to.equal(file1Contents);     
+    expect(file2Contents).to.equal(file1Contents);
     done();
   })
 
   it('should append filename as prefix in the content', (done) => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[4])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[4])).toString();
-    expect(file2Contents).to.equal(file1Contents);     
+    expect(file2Contents).to.equal(file1Contents);
     done();
   })
 
@@ -102,13 +101,20 @@ describe('MergeWebpackPlugin', () => {
   it('should use the function to generate prefixes if it\'s provided', (done) => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[6])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[6])).toString();
-    expect(file2Contents).to.equal(file1Contents);     
+    expect(file2Contents).to.equal(file1Contents);
     done();
   })
 
   it('should format output if space parameter is provided', (done) => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[7])).toString();
     var file2Contents = fs.readFileSync(path.join(examplePath, actual[7])).toString();
+    expect(file2Contents).to.equal(file1Contents);
+    done();
+  })
+
+  it('should merge duplicates into an array', (done) => {
+    var file1Contents = fs.readFileSync(path.join(examplePath, expected[8])).toString();
+    var file2Contents = fs.readFileSync(path.join(examplePath, actual[8])).toString();
     expect(file2Contents).to.equal(file1Contents);
     done();
   })

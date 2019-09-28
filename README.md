@@ -100,11 +100,12 @@ new MergeJsonWebpackPlugin({
 ## Options
 | key            | Description.                                                                              |                                                                 |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
-| debug             | if true ,logs will be enabled, by default debug is false. |
+| debug             | if true, logs will be enabled, by default debug is false. |
 | encoding      	| Optional, encoding to be used default is utf-8.	|       |
 | globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior.	|       |
 | prefixFileName    | Optional. If true, file names will be prefixed to each file content and merged with outfile<br><br>By default, the generated prefix is ​​simply the filename without the .json extension. If you want to customize the process of generating prefixes, you can pass a function as this option. The function should take exactly one argument (the file path) and returns the prefix.|
 | space             | Optional. A `String` or `Number` object that's used to insert white space into the output JSON file for readability purposes. See [`space` parameter description on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#Parameters) for details. |
+| duplicates             | **Default** value is false.If true, keys at same heirarchy will be preserved in an array, check [example](https://gist.github.com/alexxlagutin/68f89cae748282f19104f94a04196132#gistcomment-3039950). |
 
 ## Change Logs   
    
@@ -121,7 +122,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.17            | Filex extension check removed,file can be of any extention as long as content is json.Testcases also added  |
 | 1.0.18            | Bom issue fix #22 |
 | 1.0.19            | Support for custom "prefixFileName" function  |
-| 1.0.20            | Output formatting via `space` parameter added |
+| 1.0.20            | Output formatting via `space` parameter added, preserving duplicates in an array if `duplicates:true` instead of overriding existing value. |
 
 ## Sample
    To see sample you can navigate to example folder.

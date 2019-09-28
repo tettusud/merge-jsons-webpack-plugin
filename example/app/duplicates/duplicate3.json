@@ -1,0 +1,13 @@
+{
+    "user": [
+        {
+            "firstName": "TestFirstName1",
+            "lastName": "TestLastName1",
+            "age": 10,
+            "address": {
+                "street": "Street 33",
+                "pincode": "640046"
+            }
+        }
+    ]
+}

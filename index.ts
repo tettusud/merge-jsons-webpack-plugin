@@ -221,7 +221,16 @@ class MergeJsonWebpackPlugin {
                     //concatenate arrays
                     target[key] = target[key].concat(source[key]);
                 } else if (typeof source[key] == "object") {
-                    if (!target[key]) target[key] = {};
+                    if (!target[key]) {
+                        target[key] = {};
+                    } else { // if target key already exists, and mergeDuplicates=true, concatenate into array
+                        if (this.options.duplicates) {
+                            if (!(target[key] instanceof Array)) {
+                                target[key] = [target[key]];
+                            }
+                            target[key].push(source[key]);
+                        }
+                    }
                     this.mergeDeep(target[key], source[key]);
                 } else {
                     target[key] = source[key];

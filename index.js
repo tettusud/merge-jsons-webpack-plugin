@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 const es6_promise_1 = require("es6-promise");
 const path = require("path");
 const Glob = require("glob");
@@ -183,8 +191,17 @@ class MergeJsonWebpackPlugin {
                         target[key] = target[key].concat(source[key]);
                     }
                     else if (typeof source[key] == "object") {
-                        if (!target[key])
+                        if (!target[key]) {
                             target[key] = {};
+                        }
+                        else {
+                            if (this.options.duplicates) {
+                                if (!(target[key] instanceof Array)) {
+                                    target[key] = [target[key]];
+                                }
+                                target[key].push(source[key]);
+                            }
+                        }
                         this.mergeDeep(target[key], source[key]);
                     }
                     else {
@@ -197,7 +214,7 @@ class MergeJsonWebpackPlugin {
         this._glob = (pattern, options) => {
             return new es6_promise_1.Promise((resolve, reject) => {
                 const defaultOptions = { mark: true, cwd: this.options.compiler.context };
-                new Glob(pattern, Object.assign({}, options, defaultOptions), function (err, matches) {
+                new Glob(pattern, __assign({}, options, defaultOptions), function (err, matches) {
                     if (err) {
                         reject(err);
                     }
