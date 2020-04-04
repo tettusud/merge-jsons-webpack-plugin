@@ -214,7 +214,7 @@ class MergeJsonWebpackPlugin {
         this._glob = (pattern, options) => {
             return new es6_promise_1.Promise((resolve, reject) => {
                 const defaultOptions = { mark: true, cwd: this.options.compiler.context };
-                new Glob(pattern, __assign({}, options, defaultOptions), function (err, matches) {
+                new Glob(pattern, __assign({}, defaultOptions, options), function (err, matches) {
                     if (err) {
                         reject(err);
                     }

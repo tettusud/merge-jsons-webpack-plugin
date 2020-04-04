@@ -31,7 +31,8 @@ module.exports = {
         ]
       },
       "globOptions": {
-        "nosort": true
+        "nosort": true,
+        "mark":false
       }
     }),
 
