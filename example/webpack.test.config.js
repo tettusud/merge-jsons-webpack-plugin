@@ -19,28 +19,28 @@ module.exports = {
     /**
      *  Merge one or more files by glob options
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "encoding": "ascii",
-      "output": {
-        "groupBy": [
-          {
-            "pattern": "app/groupBy/countries/*.json",
-            "fileName": "groupBy/countries/countries.json"
-          }
-        ]
-      },
-      "globOptions": {
-        "nosort": true,
-        "mark":false
-      }
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": true,
+    //   "encoding": "ascii",
+    //   "output": {
+    //     "groupBy": [
+    //       {
+    //         "pattern": "app/groupBy/countries/*.json",
+    //         "fileName": "groupBy/countries/countries.json"
+    //       }
+    //     ]
+    //   },
+    //   "globOptions": {
+    //     "nosort": true,
+    //     "mark":false
+    //   }
+    // }),
 
     /**
      *    Merge one or more files by glob options
      */
     new MergeJsonWebpackPlugin({
-      "debug": false,
+      "debug": true,
       "encoding": "utf8",
       "output": {
         "groupBy": [
@@ -65,17 +65,17 @@ module.exports = {
      *      2.File that is generated and is present in the webpack assets
      *   
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "files": ['app/files/file1.json',
-        'app/files/file2.json',
-        'app/files/file3.json',
-        'app/files/file4.txt',
-        'groupBy/locales/fr.json'],
-      "output": {
-        "fileName": "files/file.json"
-      }
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": false,
+    //   "files": ['app/files/file1.json',
+    //     'app/files/file2.json',
+    //     'app/files/file3.json',
+    //     'app/files/file4.txt',
+    //     'groupBy/locales/fr.json'],
+    //   "output": {
+    //     "fileName": "files/file.json"
+    //   }
+    // }),
 
     /**
      *  Merge content of the file and prefix the individual file name as root element of the
@@ -101,17 +101,17 @@ module.exports = {
      *          }
      *       }
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "prefixFileName": true,
-      "files": [
-        'app/prefixFileName/sign_in.json',
-        'app/prefixFileName/sign_up.json'
-      ],
-      "output": {
-        "fileName": "prefixFileName/prefixFileName.json"
-      }
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": false,
+    //   "prefixFileName": true,
+    //   "files": [
+    //     'app/prefixFileName/sign_in.json',
+    //     'app/prefixFileName/sign_up.json'
+    //   ],
+    //   "output": {
+    //     "fileName": "prefixFileName/prefixFileName.json"
+    //   }
+    // }),
 
     /**
      *  Merge files and prefix them using the provided function
@@ -141,18 +141,18 @@ module.exports = {
      *          }
      *       }
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "prefixFileName": filePath => path.basename(filePath).split('.')[0]
-        .replace(/_+([a-z0-9])/ig, (_, char) => char.toUpperCase()),
-      "files": [
-        'app/prefixFileNameFn/sign_in.en.json',
-        'app/prefixFileNameFn/sign_up.en.json'
-      ],
-      "output": {
-        "fileName": "prefixFileNameFn/prefixFileNameFn.json"
-      }
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": false,
+    //   "prefixFileName": filePath => path.basename(filePath).split('.')[0]
+    //     .replace(/_+([a-z0-9])/ig, (_, char) => char.toUpperCase()),
+    //   "files": [
+    //     'app/prefixFileNameFn/sign_in.en.json',
+    //     'app/prefixFileNameFn/sign_up.en.json'
+    //   ],
+    //   "output": {
+    //     "fileName": "prefixFileNameFn/prefixFileNameFn.json"
+    //   }
+    // }),
 
     /**
      * This file contains the 3 BOM bytes EF BB BF
@@ -160,44 +160,44 @@ module.exports = {
      * still parse the JSON file.
      * Fourth byte should be a `{` character, hex: 7B
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "files": ['app/bom-bytes/bom-bytes.json'], // Check this file with a HEX viewer.
-      "output": {
-        "fileName": "bom-bytes/bom-bytes.json"
-      }
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": false,
+    //   "files": ['app/bom-bytes/bom-bytes.json'], // Check this file with a HEX viewer.
+    //   "output": {
+    //     "fileName": "bom-bytes/bom-bytes.json"
+    //   }
+    // }),
 
     /**
      * Merge files and produce formatted output
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "files": ['app/files/file1.json',
-        'app/files/file2.json',
-        'app/files/file3.json',
-        'app/files/file4.txt',
-        'groupBy/locales/fr.json'],
-      "output": {
-        "fileName": "space/space.json"
-      },
-      "space": 4
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": false,
+    //   "files": ['app/files/file1.json',
+    //     'app/files/file2.json',
+    //     'app/files/file3.json',
+    //     'app/files/file4.txt',
+    //     'groupBy/locales/fr.json'],
+    //   "output": {
+    //     "fileName": "space/space.json"
+    //   },
+    //   "space": 4
+    // }),
 
     /**
      * @mergeDuplicates default false
      * if true, it will concatenate keys into array, instead of overriding.
      */
-    new MergeJsonWebpackPlugin({
-      "debug": false,
-      "duplicates": true,
-      "files": ['app/duplicates/duplicate1.json',
-        'app/duplicates/duplicate2.json',
-        'app/duplicates/duplicate3.json'],
-      "output": {
-        "fileName": "duplicates/duplicate.json"
-      }
-    }),
+    // new MergeJsonWebpackPlugin({
+    //   "debug": false,
+    //   "duplicates": true,
+    //   "files": ['app/duplicates/duplicate1.json',
+    //     'app/duplicates/duplicate2.json',
+    //     'app/duplicates/duplicate3.json'],
+    //   "output": {
+    //     "fileName": "duplicates/duplicate.json"
+    //   }
+    // }),
 
   ]
 };

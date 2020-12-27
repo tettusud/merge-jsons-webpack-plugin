@@ -58,12 +58,12 @@ before(function (done) {
  */
 describe('MergeWebpackPlugin', () => {
 
-  it('should merge files by glob', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[0])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[0])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should merge files by glob', (done) => {
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[0])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[0])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
   it('should merge files by more than one glob', (done) => {
     var file1Contents = fs.readFileSync(path.join(examplePath, expected[1])).toString();
@@ -75,48 +75,48 @@ describe('MergeWebpackPlugin', () => {
     done();
   })
 
-  it('should merge files by filename', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[3])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[3])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should merge files by filename', (done) => {
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[3])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[3])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
-  it('should append filename as prefix in the content', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[4])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[4])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should append filename as prefix in the content', (done) => {
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[4])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[4])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
-  it('should process jsons with BOM bytes', (done) => {
-    // These 2 files don't have BOM bytes on them.
-    // The file bundled via wepack.test.config.js does
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[5])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[5])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should process jsons with BOM bytes', (done) => {
+  //   // These 2 files don't have BOM bytes on them.
+  //   // The file bundled via wepack.test.config.js does
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[5])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[5])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
-  it('should use the function to generate prefixes if it\'s provided', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[6])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[6])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should use the function to generate prefixes if it\'s provided', (done) => {
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[6])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[6])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
-  it('should format output if space parameter is provided', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[7])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[7])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should format output if space parameter is provided', (done) => {
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[7])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[7])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
-  it('should merge duplicates into an array', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[8])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[8])).toString();
-    expect(file2Contents).to.equal(file1Contents);
-    done();
-  })
+  // it('should merge duplicates into an array', (done) => {
+  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[8])).toString();
+  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[8])).toString();
+  //   expect(file2Contents).to.equal(file1Contents);
+  //   done();
+  // })
 
 });

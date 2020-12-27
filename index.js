@@ -1,183 +1,87 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
-const es6_promise_1 = require("es6-promise");
 const path = require("path");
-const Glob = require("glob");
 const fs = require("fs");
-const _root = path.resolve(__dirname, "./");
+const glob = require("glob");
 const UTF8_ENCODING = "utf8";
-const allowedExtensions = ".json";
+const plugin = "MergeJsonWebpackPlugin";
+const defaultOpts = {
+    encoding: UTF8_ENCODING,
+    debug: false
+};
 class MergeJsonWebpackPlugin {
     constructor(options) {
+        this.getFiles = (compiler) => {
+            var _a, _b;
+            const filesToProcess = [];
+            const groupBy = (_a = this.options.output) === null || _a === void 0 ? void 0 : _a.groupBy;
+            const files = this.options.files;
+            if (groupBy) {
+                const defaultGlobOptions = { mark: true, cwd: compiler.context };
+                const globOptions = Object.assign(Object.assign({}, defaultGlobOptions), this.options.globOptions);
+                groupBy.map((g) => {
+                    const { pattern, fileName } = g;
+                    const files = glob.sync(pattern, globOptions);
+                    filesToProcess.push({
+                        files,
+                        outputPath: fileName
+                    });
+                });
+            }
+            else if (files) {
+                filesToProcess.push({
+                    files,
+                    outputPath: (_b = this.options.output) === null || _b === void 0 ? void 0 : _b.fileName
+                });
+            }
+            return filesToProcess;
+        };
         this.apply = (compiler) => {
-            this.options.compiler = compiler;
-            const emit = (compilation, done) => {
-                this.logger.debug('MergeJsonsWebpackPlugin emit started...');
-                this.fileDependencies = [];
-                this.options.compilation = compilation;
-                let files = this.options.files;
-                let output = this.options.output;
-                let groupBy = output.groupBy;
-                if (files && groupBy) {
-                    compilation.errors.push('MergeJsonWebpackPlugin: Specify either files (all the files to merge with filename) or groupBy to specifiy a pattern(s)' +
-                        'of file(s) to merge. ');
-                }
-                if (files) {
-                    let outputPath = output.fileName;
-                    new es6_promise_1.Promise((resolve, reject) => {
-                        this.processFiles(files, outputPath, resolve, reject);
-                    })
-                        .then((res) => {
-                        this.addAssets(compilation, res);
-                        done();
-                    })
-                        .catch((err) => {
-                        this.handleErrors(compilation, err, done);
-                    });
-                }
-                else if (groupBy) {
-                    if (groupBy.length == 0) {
-                        compilation.errors.push('MergeJsonWebpackPlugin: \"groupBy\" must be non empty object');
-                    }
-                    let globOptions = this.options.globOptions || {};
-                    let groupByPromises = groupBy.map((globs) => {
-                        return new es6_promise_1.Promise((resolve, reject) => {
-                            let pattern = globs.pattern;
-                            let outputPath = globs.fileName;
-                            this._glob(pattern, globOptions).then((files) => {
-                                this.processFiles(files, outputPath, resolve, reject);
-                            });
-                        });
-                    });
-                    es6_promise_1.Promise.all(groupByPromises)
-                        .then((opsResponse) => {
-                        opsResponse.forEach((res) => {
-                            this.addAssets(compilation, res);
-                        });
-                        done();
-                    })
-                        .catch((err) => {
-                        this.handleErrors(compilation, err, done);
-                    });
-                }
-                this.logger.debug('MergeJsonsWebpackPlugin emit completed...');
-            };
-            const afterEmit = (compilation, done) => {
-                this.logger.debug("MergeJsonsWebpackPlugin after-emit starts...");
-                let compilationFileDependencies;
-                let addFileDependency;
-                if (Array.isArray(compilation.fileDependencies)) {
-                    compilationFileDependencies = new Set(compilation.fileDependencies);
-                    addFileDependency = (file) => compilation.fileDependencies.push(file);
-                }
-                else {
-                    compilationFileDependencies = compilation.fileDependencies;
-                    addFileDependency = (file) => compilation.fileDependencies.add(file);
-                }
-                for (const file of this.fileDependencies) {
-                    let filePath = path.join(compiler.context, file);
-                    if (!compilationFileDependencies.has(filePath)) {
-                        addFileDependency(filePath);
+            this.logger.debug('Running apply1() ::::::');
+            compiler.hooks.emit.tapAsync('MergeJsonWebpackPlugin', (compilation, callback) => {
+                const fileGroups = this.getFiles(compiler);
+                const files = [].concat.apply([], fileGroups.map(g => g.files));
+                for (const file of files) {
+                    const filePath = path.join(compilation.compiler.context, file);
+                    if (!compilation.fileDependencies.has(filePath)) {
+                        compilation.fileDependencies.add(filePath);
                     }
                 }
-                this.logger.debug("MergeJsonsWebpackPlugin after-emit completed...");
-                done();
-            };
-            if (compiler.hooks) {
-                const plugin = "MergeJsonWebpackPlugin";
-                compiler.hooks.emit.tapAsync(plugin, emit);
-                compiler.hooks.afterEmit.tapAsync(plugin, afterEmit);
-            }
-            else {
-                compiler.plugin('emit', emit);
-                compiler.plugin("after-emit", afterEmit);
-            }
-        };
-        this.processFiles = (files, outputPath, resolve, reject) => {
-            this.fileDependencies = this.fileDependencies.concat(files);
-            let readFiles = files.map((f) => {
-                return new es6_promise_1.Promise((res, rej) => {
-                    this.readFile(f, res, rej);
-                });
+                for (const fileGroup of fileGroups) {
+                    this.processFiles(compilation, fileGroup.files, fileGroup.outputPath);
+                }
+                callback();
             });
-            let mergedContents = {};
-            es6_promise_1.Promise.all(readFiles)
-                .then((contents) => {
-                contents.forEach((content) => {
-                    mergedContents = this.mergeDeep(mergedContents, content);
-                });
-                mergedContents = JSON.stringify(mergedContents, null, this.options.space);
-                resolve(new Response(outputPath, mergedContents));
+        };
+        this.processFiles = (compilation, files, outputPath) => {
+            const mergedJSON = files.map(file => {
+                try {
+                    const content = this.readContent(compilation, file);
+                    return this.parseJson(file, content.toString());
+                }
+                catch (e) {
+                    this.logger.error(e);
+                }
+                return null;
             })
-                .catch((error) => {
-                reject(error);
-            });
+                .reduce((acc, curr) => this.mergeDeep(acc, curr));
+            this.addAssets(compilation, outputPath, JSON.stringify(mergedJSON, null, this.options.space));
         };
-        this.readFile = (f, resolve, reject) => {
-            let compilation = this.options.compilation;
-            let contextPath = this.options.compiler.context;
-            f = f.trim();
-            let extn = path.extname(f).toLowerCase();
-            if (extn !== allowedExtensions) {
-                this.logger.error(`${f} doesn't contain a valid file extention,trying to load it contents.`);
-            }
-            let entryData = undefined;
+        this.readContent = (compilation, fileName) => {
+            fileName = fileName.trim();
+            let filePath = path.join(compilation.compiler.context, fileName);
             try {
-                let filePath = path.join(contextPath, f);
-                entryData = fs.readFileSync(filePath, this.options.encoding);
+                return fs.readFileSync(filePath, this.options.encoding);
             }
             catch (e) {
-                this.logger.error(`${f} missing,looking for it in assets.`);
-                if (compilation.assets[f]) {
-                    this.logger.debug(`${f} found in the compilation assets so loading from assets.`);
-                    entryData = compilation.assets[f].source();
+                this.logger.debug(`${fileName} missing,looking for it in assets.`);
+                if (compilation.assets[fileName]) {
+                    this.logger.debug(` Loading ${fileName} from compilation assets.`);
+                    return compilation.assets[fileName].source();
                 }
                 else {
-                    this.logger.error(`MergeJsonWebpackPlugin: File missing [ ${f}] in path or assets `, e);
-                    reject(`MergeJsonWebpackPlugin: Unable to locate file ${f}`);
-                    return;
+                    throw new Error(`File ${fileName} not found.`);
                 }
             }
-            if (!entryData) {
-                this.logger.error(`MergeJsonWebpackPlugin: Data appears to be empty in file [${f}]`);
-                reject(`MergeJsonWebpackPlugin: Data appears to be empty in file [ ${f} ]`);
-            }
-            if (entryData.charCodeAt(0) === 0xFEFF) {
-                entryData = entryData.slice(1);
-            }
-            let entryDataAsJSON = {};
-            try {
-                let fileContent = JSON.parse(entryData);
-                if (this.options.prefixFileName) {
-                    if (typeof this.options.prefixFileName === 'function') {
-                        entryDataAsJSON[this.options.prefixFileName(f)] = fileContent;
-                    }
-                    else {
-                        entryDataAsJSON[path.basename(f, allowedExtensions)] = fileContent;
-                    }
-                }
-                else {
-                    entryDataAsJSON = fileContent;
-                }
-            }
-            catch (e) {
-                this.logger.error(`MergeJsonWebpackPlugin: Error parsing the json file [ ${f} ] and error is `, e);
-                reject(`MergeJsonWebpackPlugin: Error parsing the json file [${f}] `, e);
-                return;
-            }
-            if (typeof entryDataAsJSON !== 'object') {
-                this.logger.error(`MergeJsonWebpackPlugin: Not a valid object , file  [ ${f} ]`);
-                reject(`MergeJsonWebpackPlugin: Not a valid object , file  [${f} ]`);
-                return;
-            }
-            resolve(entryDataAsJSON);
         };
         this.mergeDeep = (target, source) => {
             if (typeof target == "object" && typeof source == "object") {
@@ -211,51 +115,61 @@ class MergeJsonWebpackPlugin {
             }
             return target;
         };
-        this._glob = (pattern, options) => {
-            return new es6_promise_1.Promise((resolve, reject) => {
-                const defaultOptions = { mark: true, cwd: this.options.compiler.context };
-                new Glob(pattern, __assign({}, defaultOptions, options), function (err, matches) {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(matches);
-                });
-            });
-        };
-        this.handleErrors = (compilation, error, done) => {
-            compilation.errors.push(error);
-            done();
-        };
-        this.options = options;
-        this.options.encoding = this.options.encoding != null ? this.options.encoding : UTF8_ENCODING;
+        this.options = Object.assign(defaultOpts, options);
         this.logger = new Logger(this.options.debug);
+        this.logger.debug(' options: ', options);
     }
-    addAssets(compilation, res) {
-        compilation.assets[res.filepath] = {
+    parseJson(fileName, content) {
+        if (!content) {
+            throw new Error(`Data appears to be empty in the file := [ ${fileName} ]`);
+        }
+        if (content.charCodeAt(0) === 0xFEFF) {
+            content = content.slice(1);
+        }
+        let json = {};
+        try {
+            let fileContent = JSON.parse(content);
+            if (this.options.prefixFileName) {
+                if (typeof this.options.prefixFileName === 'function') {
+                    json[this.options.prefixFileName(fileName)] = fileContent;
+                }
+                else {
+                    json[path.basename(fileName, ".json")] = fileContent;
+                }
+            }
+            else {
+                json = fileContent;
+            }
+        }
+        catch (e) {
+            throw e;
+        }
+        if (typeof json !== 'object') {
+            throw new Error(`Not a valid json data in ${fileName}`);
+        }
+        return json;
+    }
+    addAssets(compilation, filePath, content) {
+        compilation.assets[filePath] = {
             size: function () {
-                return res.content.length;
+                return content.length;
             },
             source: function () {
-                return res.content;
+                return content;
             }
         };
-    }
-}
-class Response {
-    constructor(filepath, content) {
-        this.filepath = filepath;
-        this.content = content;
     }
 }
 class Logger {
     constructor(isDebug) {
         this.isDebug = false;
-        this.debug = (msg) => {
-            if (this.isDebug)
-                console.log(msg);
+        this.debug = (...logs) => {
+            if (this.isDebug) {
+                console.log('\x1b[46m%s\x1b[0m', `${plugin} : ${logs}`);
+            }
         };
-        this.error = (msg, e) => {
-            console.error(msg, e != undefined ? e : "");
+        this.error = (e) => {
+            console.error('\x1b[41m%s\x1b[0m', `${plugin} : ${e.message}`);
         };
         this.isDebug = isDebug;
     }

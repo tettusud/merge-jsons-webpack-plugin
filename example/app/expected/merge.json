@@ -1,0 +1,24 @@
+{
+    "user": [
+        {
+            "firstName": "Sudharsan",
+            "lastName": "Tettu",
+            "age": 35
+        },
+        {
+            "firstName": "TestFirstName",
+            "lastName": "TestLastName",
+            "age": 135
+        },
+        {
+            "firstName": "TestFirstName1",
+            "lastName": "TestLastName1",
+            "age": 10,
+            "address": {
+                "street": "Street 33",
+                "pincode": "640046"
+            }
+        }
+    ],
+    "numbers": [1,2,3,4,5,6,7]
+}
