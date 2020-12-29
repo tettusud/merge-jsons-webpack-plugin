@@ -1,0 +1,14 @@
+{
+    "user": {
+        "name": "World",
+        "skills": [
+            "java",
+            "php"
+        ],
+        "address": {
+            "line1": "Address Line 2",
+            "zipcode": 55333
+        },
+        "mobile": 111222333
+    }
+}

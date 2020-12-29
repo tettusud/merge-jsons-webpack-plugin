@@ -1,0 +1,13 @@
+{
+    "user": {
+        "name": "Hello",
+        "skills": [
+            "javascript",
+            "python"
+        ],
+        "address": {
+            "line1": "Address Line 1"
+        },
+        "remarks": "Demo remarks"
+    }
+}

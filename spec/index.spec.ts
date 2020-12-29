@@ -3,54 +3,27 @@ import 'mocha';
 const path = require('path');
 const webpack = require('webpack');
 const rimraf = require('rimraf');
-const fs = require('fs');
+import { diff } from 'json-diff';
 
-const examplePath = path.resolve(__dirname, '..', 'example');
-var outputPath = path.resolve(examplePath, 'build');
+const contextPath = path.join(__dirname, "../", "example")
+const outputPath = path.join(__dirname, "../", "example", "build")
 
-const expected = [
-  'app/expected/countries.json',
-  'app/expected/en.json',
-  'app/expected/fr.json',
-  'app/expected/file.json',
-  'app/expected/prefixFileName.json',
-  'app/expected/bom-bytes.json',
-  'app/expected/prefixFileNameFn.json',
-  'app/expected/space.json',
-  'app/expected/duplicate.json'
-];
-
-const actual = [
-  'build/groupBy/countries/countries.json',
-  'build/groupBy/locales/en.json',
-  'build/groupBy/locales/fr.json',
-  'build/files/file.json',
-  'build/prefixFileName/prefixFileName.json',
-  'build/bom-bytes/bom-bytes.json',
-  'build/prefixFileNameFn/prefixFileNameFn.json',
-  'build/space/space.json',
-  'build/duplicates/duplicate.json'
-];
-
-describe('should merge json files', () => {
-
-  expect('hello world', 'hello world');
-});
 
 before(function (done) {
   this.timeout(5000);
-  var options = require(path.join(examplePath, 'webpack.test.config.js'));
-  options.mode = 'production';
-  options.context = examplePath;
 
   rimraf(outputPath, () => {
-    webpack(options, (err) => {
+    const options = require(path.join(contextPath, 'webpack.test.config.js'));
+    options.mode = 'production';
+    options.context = contextPath;
+
+    webpack(options, (err, stats) => {
       if (err) return done(err);
+      // add a file to asset
       //if success call done
       done();
     })
-  })
-
+  });
 });
 
 /**
@@ -58,65 +31,80 @@ before(function (done) {
  */
 describe('MergeWebpackPlugin', () => {
 
-  // it('should merge files by glob', (done) => {
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[0])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[0])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should merge by file names', (done) => {
+    const expected = require('../example/app/merge-by-file-names/expected.json')
+    const actual = require('../example/build/merge-by-file-names/output.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  });
 
-  it('should merge files by more than one glob', (done) => {
-    var file1Contents = fs.readFileSync(path.join(examplePath, expected[1])).toString();
-    var file2Contents = fs.readFileSync(path.join(examplePath, actual[1])).toString();
-    expect(file1Contents).to.equal(file2Contents);
-    file1Contents = fs.readFileSync(path.join(examplePath, expected[2])).toString();
-    file2Contents = fs.readFileSync(path.join(examplePath, actual[2])).toString();
-    expect(file2Contents).to.equal(file1Contents);
+  it('should merge files by glob (more than one pattern in glob array)', (done) => {
+    const expected1 = require('../example/app/glob/multiple/expected_en.json')
+    const actual1 = require('../example/build/glob/multiple/en.json')
+    expect(diff(expected1, actual1)).to.be.undefined;
+
+    const expected2 = require('../example/app/glob/multiple/expected_fr.json')
+    const actual2 = require('../example/build/glob/multiple/fr.json')
+    expect(diff(expected2, actual2)).to.be.undefined;
+    done();
+  });
+
+  it('should handle non json extention files.', (done) => {
+    const expected = require('../example/app/non-json-extn/expected.json')
+    const actual = require('../example/build/non-json-extn/output.json')
+    expect(diff(expected, actual)).to.be.undefined;
     done();
   })
 
-  // it('should merge files by filename', (done) => {
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[3])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[3])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should override values of key, when overwrite is true (default option)', (done) => {
+    const expected = require('../example/app/overwrite-values/expected.json')
+    const actual = require('../example/build/overwrite-values/actual.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  })
 
-  // it('should append filename as prefix in the content', (done) => {
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[4])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[4])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should merge into array, values of key, when overwrite is false.', (done) => {
+    const expected = require('../example/app/merge-values/expected.json')
+    const actual = require('../example/build/merge-values/actual.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  })
 
-  // it('should process jsons with BOM bytes', (done) => {
-  //   // These 2 files don't have BOM bytes on them.
-  //   // The file bundled via wepack.test.config.js does
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[5])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[5])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should append filename as prefix in the content', (done) => {
+    const expected = require('../example/app/prefixFileName/expected.json')
+    const actual = require('../example/build/prefixFileName/actual.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  })
 
-  // it('should use the function to generate prefixes if it\'s provided', (done) => {
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[6])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[6])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should process jsons with BOM bytes', (done) => {
+    // These 2 files don't have BOM bytes on them.
+    // The file bundled via wepack.test.config.js does
+    const expected = require('../example/app/bom-bytes/bom-bytes.json')
+    const actual = require('../example/build/bom-bytes/bom-bytes.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  })
 
-  // it('should format output if space parameter is provided', (done) => {
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[7])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[7])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should use the function to generate prefixes if it\'s provided', (done) => {
+    const expected = require('../example/app/prefixFileNameFn/expected.json')
+    const actual = require('../example/build/prefixFileNameFn/actual.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  })
 
-  // it('should merge duplicates into an array', (done) => {
-  //   var file1Contents = fs.readFileSync(path.join(examplePath, expected[8])).toString();
-  //   var file2Contents = fs.readFileSync(path.join(examplePath, actual[8])).toString();
-  //   expect(file2Contents).to.equal(file1Contents);
-  //   done();
-  // })
+  it('should format output if space parameter is provided', (done) => {
+    const expected = require('../example/app/formatted-output/expected.json')
+    const actual = require('../example/build/formatted-output/actual.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  })
+
+  it('should load file from assets', (done) => {
+    const expected = require('../example/app/asset-files/expected.json')
+    const actual = require('../example/build/asset-files/actual.json')
+    expect(diff(expected, actual)).to.be.undefined;
+    done();
+  });
 
 });
