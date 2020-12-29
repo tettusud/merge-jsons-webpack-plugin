@@ -6,11 +6,10 @@ import * as glob from 'glob';
 const UTF8_ENCODING = "utf8";
 const plugin = "MergeJsonWebpackPlugin";
 
-const defaultOpts = {
-    encoding: UTF8_ENCODING,
-    debug: false
-}
-
+/**
+ * 
+ *  Files to merge, and output path.
+ */
 interface IMergeJsonFiles {
     files: string[];
     outputPath: string;
@@ -23,12 +22,23 @@ class MergeJsonWebpackPlugin {
     logger: Logger;
 
     constructor(options: any) {
-        this.options = Object.assign(defaultOpts, options);
+        this.options = Object.assign({
+            debug: false,
+            encoding: UTF8_ENCODING,
+            overwrite: true
+        }, options);
         this.logger = new Logger(this.options.debug);
-        this.logger.debug(' options: ', options);
+        this.logger.debug(JSON.stringify(this.options, undefined, 2));
     }
 
-    getFiles = (compiler): Array<IMergeJsonFiles> => {
+
+    /**
+     * Extract files from the input options.
+     * It can be either string or pattern.
+     * @param compiler 
+     * @returns Array of { files , outputPath}
+     */
+    getFileToProcess(compiler): Array<IMergeJsonFiles> {
         // placeholder to collect files and output file name.
         const filesToProcess: Array<IMergeJsonFiles> = [];
 
@@ -67,21 +77,25 @@ class MergeJsonWebpackPlugin {
      * Entry point for webpack apply.
      * @param compiler webpack compiler object.
      */
-    apply = (compiler: any) => {
-        this.logger.debug('Running apply1() ::::::');
+    apply(compiler: any) {
+        this.logger.debug('Running apply() ::::::');
+
         compiler.hooks.emit.tapAsync('MergeJsonWebpackPlugin', (compilation, callback) => {
             // add filedependcies
-            const fileGroups: Array<IMergeJsonFiles> = this.getFiles(compiler);
-            const files = [].concat.apply([], fileGroups.map(g => g.files));
+            const fileList: Array<IMergeJsonFiles> = this.getFileToProcess(compiler);
+
+            // extract (flatten) all files from all input list and add to file watch.
+            const files = [].concat.apply([], fileList.map(g => g.files));
+
             for (const file of files) {
                 const filePath = path.join(compilation.compiler.context, file)
                 if (!compilation.fileDependencies.has(filePath)) {
                     compilation.fileDependencies.add(filePath);
                 }
             }
-            // process json files
-            for (const fileGroup of fileGroups) {
-                this.processFiles(compilation, fileGroup.files, fileGroup.outputPath);
+            // process each input group.
+            for (const opt of fileList) {
+                this.processFiles(compilation, opt.files, opt.outputPath);
             }
             callback();
         });
@@ -101,9 +115,9 @@ class MergeJsonWebpackPlugin {
             } catch (e) {
                 this.logger.error(e);
             }
-            return null;
+            return {};
         })
-        .reduce((acc, curr) => this.mergeDeep(acc, curr));
+            .reduce((acc, curr) => this.mergeDeep(acc, curr));
         // add assets to compilation.
         this.addAssets(compilation, outputPath, JSON.stringify(mergedJSON, null, this.options.space));
     }
@@ -127,7 +141,7 @@ class MergeJsonWebpackPlugin {
             //for details check issue#25
             this.logger.debug(`${fileName} missing,looking for it in assets.`);
             if (compilation.assets[fileName]) {
-                this.logger.debug(` Loading ${fileName} from compilation assets.`)
+                this.logger.debug(` Loading ${fileName} from compilation assets.`);
                 return compilation.assets[fileName].source();
             } else {
                 throw new Error(`File ${fileName} not found.`);
@@ -180,26 +194,20 @@ class MergeJsonWebpackPlugin {
     mergeDeep = (target, source) => {
         if (typeof target == "object" && typeof source == "object") {
             for (const key in source) {
-                if (source[key] === null && (target[key] === undefined || target[key] === null)) {
-                    target[key] = null;
-                } else if (source[key] instanceof Array) {
-                    if (!target[key]) target[key] = [];
-                    //concatenate arrays
-                    target[key] = target[key].concat(source[key]);
-                } else if (typeof source[key] == "object") {
-                    if (!target[key]) {
-                        target[key] = {};
-                    } else { // if target key already exists, and mergeDuplicates=true, concatenate into array
-                        if (this.options.duplicates) {
-                            if (!(target[key] instanceof Array)) {
-                                target[key] = [target[key]];
-                            }
-                            target[key].push(source[key]);
+                // check if merge is false, then preserve in an array
+                if (!target[key]) {
+                    target[key] = source[key];
+                } else {
+                    // check if overwrite is false, then merge into array.
+                    if (this.options.overwrite === false) {
+                        target[key] = [].concat(target[key], source[key]);
+                    } else {
+                        if (typeof source[key] == "object") {
+                            this.mergeDeep(target[key], source[key]);
+                        } else {
+                            target[key] = source[key];
                         }
                     }
-                    this.mergeDeep(target[key], source[key]);
-                } else {
-                    target[key] = source[key];
                 }
             }
         }
@@ -232,7 +240,7 @@ class Logger {
     }
     debug = (...logs) => {
         if (this.isDebug) {
-            console.log('\x1b[46m%s\x1b[0m', `${plugin} : ${logs}`);
+            console.log('\x1b[36m%s\x1b[0m', `${plugin} :: ${logs}`);
         }
     }
     error = (e: any) => {

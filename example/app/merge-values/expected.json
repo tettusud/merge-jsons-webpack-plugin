@@ -1,0 +1,16 @@
+{
+    "result": [
+      {
+        "title": "exam1",
+        "data": "somedata"
+      },
+      {
+        "title": "exam2",
+        "data": "somedata"
+      },
+      {
+        "title": "exam3",
+        "data": "somedata"
+      }
+    ]
+  }

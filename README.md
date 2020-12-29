@@ -6,8 +6,13 @@ For example,it will be useful to
 merge i18n json files which are in different modules into a single
 final json files in angular2 or react modules.
 
- 
 
+# Latest version and breaking changes.
+
+* Breaking changes introduced in latest version 2.0.0, now all values will be overwritten including arrays, earlier behaviour
+was to concatenate array and overrite literals.Going foward to concatenate either literals or arrays, pass **overwrite** false as an input, this will concatenate all values in target with source values.
+
+* This version also fixes compatibility issue with **Webpack 5**
  
 ## Usage
 
@@ -105,7 +110,8 @@ new MergeJsonWebpackPlugin({
 | globOptions      	| Optional, [glob options](https://github.com/isaacs/node-glob#options) to change pattern matching behavior.	|       |
 | prefixFileName    | Optional. If true, file names will be prefixed to each file content and merged with outfile<br><br>By default, the generated prefix is ​​simply the filename without the .json extension. If you want to customize the process of generating prefixes, you can pass a function as this option. The function should take exactly one argument (the file path) and returns the prefix.|
 | space             | Optional. A `String` or `Number` object that's used to insert white space into the output JSON file for readability purposes. See [`space` parameter description on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#Parameters) for details. |
-| duplicates             | **Default** value is false.If true, keys at same heirarchy will be preserved in an array, check [example](https://gist.github.com/alexxlagutin/68f89cae748282f19104f94a04196132#gistcomment-3039950). |
+| ~~duplicates~~             | ~~**Default** value is false.If true, keys at same heirarchy will be preserved in an array, check [example](https://gist.github.com/alexxlagutin/68f89cae748282f19104f94a04196132#gistcomment-3039950).~~ |
+| overwrite             | Default true, if false values(for same keys) at same heirarchy will be preserved in an array. Check [example](https://gist.github.com/alexxlagutin/68f89cae748282f19104f94a04196132#gistcomment-3039950), [issue #31](https://github.com/tettusud/merge-jsons-webpack-plugin/issues/31), [issue #63](https://github.com/tettusud/merge-jsons-webpack-plugin/issues/63) . |
 
 ## Change Logs   
    
@@ -123,7 +129,7 @@ new MergeJsonWebpackPlugin({
 | 1.0.18            | Bom issue fix #22 |
 | 1.0.19            | Support for custom "prefixFileName" function  |
 | 1.0.20            | Output formatting via `space` parameter added, preserving duplicates in an array if `duplicates:true` instead of overriding existing value. |
-
+| 2.0.0            | **Breaking Changes** Webpack 5 compatibility update, removed **duplicates** option, instead added **overwrite** with default value true, this will break existing behaviour of concatination in case of an array, instead now by default overwrites array value in target object. |
 ## Sample
    To see sample you can navigate to example folder.
    From the root folder merge-jsons-webpack-plugin, you can start the sample application

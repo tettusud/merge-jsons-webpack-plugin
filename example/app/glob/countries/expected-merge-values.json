@@ -1,0 +1,20 @@
+{
+    
+    "countries":[
+        {
+            "name":"Canada3",
+            "currency":"Dollars",
+            "language":"French"
+        },
+        {
+            "name":"India",
+            "currency":"Rupee",
+            "language":"Telugu,Hindi,Sanskrit"
+        },
+        {
+            "name":"USA",
+            "currency":"Dollars",
+            "language":"English and spanish"
+        }
+    ]
+}
