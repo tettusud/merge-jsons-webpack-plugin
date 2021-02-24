@@ -31,6 +31,13 @@ before(function (done) {
  */
 describe('MergeWebpackPlugin', () => {
 
+  it('should create blank ({}) output file even no files to merge found', (done) => {
+    const expected1 = require('../example/app/output-no-files-found/expected.json')
+    const actual1 = require('../example/build/output-no-files-found/output.json')
+    expect(diff(expected1, actual1)).to.be.undefined;
+    done();
+  });
+
   it('should merge by file names', (done) => {
     const expected = require('../example/app/merge-by-file-names/expected.json')
     const actual = require('../example/build/merge-by-file-names/output.json')
