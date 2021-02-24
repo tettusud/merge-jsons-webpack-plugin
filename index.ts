@@ -117,7 +117,7 @@ class MergeJsonWebpackPlugin {
             }
             return {};
         })
-            .reduce((acc, curr) => this.mergeDeep(acc, curr));
+            .reduce((acc, curr) => this.mergeDeep(acc, curr), {});
         // add assets to compilation.
         this.addAssets(compilation, outputPath, JSON.stringify(mergedJSON, null, this.options.space));
     }
