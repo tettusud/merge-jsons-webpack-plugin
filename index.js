@@ -4,8 +4,12 @@ const fs = require("fs");
 const glob = require("glob");
 const UTF8_ENCODING = "utf8";
 const plugin = "MergeJsonWebpackPlugin";
+const webpack = require('webpack');
+const { RawSource } = webpack.sources || require('webpack-sources');
 class MergeJsonWebpackPlugin {
+    isWebpack4;
     constructor(options) {
+        this.isWebpack4 = webpack.version.startsWith('4.');
         this.processFiles = (compilation, files, outputPath) => {
             const mergedJSON = files.map(file => {
                 try {
@@ -95,22 +99,41 @@ class MergeJsonWebpackPlugin {
     }
     apply(compiler) {
         this.logger.debug('Running apply() ::::::');
-        compiler.hooks.emit.tapAsync('MergeJsonWebpackPlugin', (compilation, callback) => {
-            const fileList = this.getFileToProcess(compiler);
-            const files = [].concat.apply([], fileList.map(g => g.files));
-            for (const file of files) {
-                const filePath = path.join(compilation.compiler.context, file);
-                if (!compilation.fileDependencies.has(filePath)) {
-                    compilation.fileDependencies.add(filePath);
+        if (this.isWebpack4) {
+            compiler.hooks.emit.tapAsync('MergeJsonWebpackPlugin', (compilation, callback) => {
+                for (const opt of this.getFileList(compilation)) {
+                    this.processFiles(compilation, opt.files, opt.outputPath);
                 }
-            }
-            for (const opt of fileList) {
-                this.processFiles(compilation, opt.files, opt.outputPath);
-            }
-            callback();
-        });
+                callback();
+            });
+        } else {
+            compiler.hooks.thisCompilation.tap(plugin, (compilation) => {
+                compilation.hooks.processAssets.tap(
+                    {
+                        name: plugin,
+                        stage: webpack.Compilation.PROCESS_ASSETS_STAGE_DERIVED,
+                    },
+                    (assets) => {
+                        for (const opt of this.getFileList(compilation)) {
+                            this.processFiles(compilation, opt.files, opt.outputPath);
+                        }
+                    }
+                );
+            });
+        }
     }
     ;
+    getFileList(compilation) {
+        const fileList = this.getFileToProcess(compilation.compiler);
+        const files = [].concat.apply([], fileList.map(g => g.files));
+        for (const file of files) {
+            const filePath = path.join(compilation.compiler.context, file);
+            if (!compilation.fileDependencies.has(filePath)) {
+                compilation.fileDependencies.add(filePath);
+            }
+        }
+        return fileList;
+    }
     parseJson(fileName, content) {
         if (!content) {
             throw new Error(`Data appears to be empty in the file := [ ${fileName} ]`);
@@ -142,14 +165,18 @@ class MergeJsonWebpackPlugin {
         return json;
     }
     addAssets(compilation, filePath, content) {
-        compilation.assets[filePath] = {
-            size: function () {
-                return content.length;
-            },
-            source: function () {
-                return content;
-            }
-        };
+        if (this.isWebpack4) {
+            compilation.assets[filePath] = {
+                size: function () {
+                    return content.length;
+                },
+                source: function () {
+                    return content;
+                }
+            };
+        } else {
+            compilation.emitAsset(filePath, new RawSource(content));
+        }
     }
 }
 class Logger {
