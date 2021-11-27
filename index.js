@@ -95,19 +95,20 @@ class MergeJsonWebpackPlugin {
     }
     apply(compiler) {
         this.logger.debug('Running apply() ::::::');
-        compiler.hooks.emit.tapAsync('MergeJsonWebpackPlugin', (compilation, callback) => {
-            const fileList = this.getFileToProcess(compiler);
-            const files = [].concat.apply([], fileList.map(g => g.files));
-            for (const file of files) {
-                const filePath = path.join(compilation.compiler.context, file);
-                if (!compilation.fileDependencies.has(filePath)) {
-                    compilation.fileDependencies.add(filePath);
+        compiler.hooks.thisCompilation.tap('MergeJsonWebpackPlugin', (compilation) => {
+            compilation.hooks.additionalAssets.tap('MergeJsonWebpackPlugin', () => {
+                const fileList = this.getFileToProcess(compiler);
+                const files = [].concat.apply([], fileList.map(g => g.files));
+                for (const file of files) {
+                    const filePath = path.join(compilation.compiler.context, file);
+                    if (!compilation.fileDependencies.has(filePath)) {
+                        compilation.fileDependencies.add(filePath);
+                    }
                 }
-            }
-            for (const opt of fileList) {
-                this.processFiles(compilation, opt.files, opt.outputPath);
-            }
-            callback();
+                for (const opt of fileList) {
+                    this.processFiles(compilation, opt.files, opt.outputPath);
+                }
+            });
         });
     }
     ;

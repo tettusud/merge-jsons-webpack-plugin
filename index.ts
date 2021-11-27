@@ -80,25 +80,28 @@ class MergeJsonWebpackPlugin {
     apply(compiler: any) {
         this.logger.debug('Running apply() ::::::');
 
-        compiler.hooks.emit.tapAsync('MergeJsonWebpackPlugin', (compilation, callback) => {
-            // add filedependcies
-            const fileList: Array<IMergeJsonFiles> = this.getFileToProcess(compiler);
+        compiler.hooks.thisCompilation.tap('MergeJsonWebpackPlugin', (compilation) => {
 
-            // extract (flatten) all files from all input list and add to file watch.
-            const files = [].concat.apply([], fileList.map(g => g.files));
+            compilation.hooks.additionalAssets.tap('MergeJsonWebpackPlugin', () => {
 
-            for (const file of files) {
-                const filePath = path.join(compilation.compiler.context, file)
-                if (!compilation.fileDependencies.has(filePath)) {
-                    compilation.fileDependencies.add(filePath);
+                const fileList: Array<IMergeJsonFiles> = this.getFileToProcess(compiler);
+
+                // extract (flatten) all files from all input list and add to file watch.
+                const files = [].concat.apply([], fileList.map(g => g.files));
+
+                for (const file of files) {
+                    const filePath = path.join(compilation.compiler.context, file)
+                    if (!compilation.fileDependencies.has(filePath)) {
+                        compilation.fileDependencies.add(filePath);
+                    }
                 }
-            }
-            // process each input group.
-            for (const opt of fileList) {
-                this.processFiles(compilation, opt.files, opt.outputPath);
-            }
-            callback();
+                // process each input group.
+                for (const opt of fileList) {
+                    this.processFiles(compilation, opt.files, opt.outputPath);
+                }
+            });
         });
+
     };
 
     /**
