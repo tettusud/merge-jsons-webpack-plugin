@@ -18,6 +18,25 @@ module.exports = {
     }),
 
     /**
+     *  Create output file even when no files to merge were found
+     */
+    new MergeJsonWebpackPlugin({
+      "debug": false,
+      "encoding": "ascii",
+      "output": {
+        "groupBy": [
+          {
+            "pattern": "app/output-no-files-found/**/en.json",
+            "fileName": "output-no-files-found/output.json"
+          },
+        ]
+      },
+      "globOptions": {
+        "nosort": true
+      }
+    }),
+
+    /**
      *  Merge one or more files and write the json to output.
      */
     new MergeJsonWebpackPlugin({
@@ -58,7 +77,7 @@ module.exports = {
 
     /**
      *   Merge non json files as well.
-     *   
+     *
      */
     new MergeJsonWebpackPlugin({
       "debug": false,
@@ -103,15 +122,15 @@ module.exports = {
      *  Merge content of the file and prefix the individual file name as root element of the
      *  correspoinding file content
      *  for eg:
-     *   sign_in.json 
+     *   sign_in.json
      *       {
      *         'filename':'sign_in'
      *       }
-     *   sign_up.json 
+     *   sign_up.json
      *       {
      *         'filename':'sign_up'
      *       }
-     *   
+     *
      *  --------OUTPUT----------
      *  prefixFileName.json
      *       {
@@ -137,7 +156,7 @@ module.exports = {
 
     /**
      *  Merge files and prefix them using the provided function
-     *  
+     *
      *  for eg:
      *   sign_in.en.json
      *       {
@@ -147,11 +166,11 @@ module.exports = {
      *       {
      *          "submit": "Sign up"
      *       }
-     *       
+     *
      *  The "prefixFileName" function: filePath => path.basename(filePath)
      *                                                 .split('.')[0]
      *                                                 .replace(/_+([a-z0-9])/ig, (_, char) => char.toUpperCase())
-     *   
+     *
      *  --------OUTPUT----------
      *  prefixFileNameFn.json
      *       {
